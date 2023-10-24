@@ -1,0 +1,144 @@
+--------------------------------------------------------
+--  파일이 생성됨 - 화요일-10월-24-2023   
+--------------------------------------------------------
+--------------------------------------------------------
+--  DDL for Table FAQ
+--------------------------------------------------------
+
+  CREATE TABLE "MEDIPAW"."FAQ" 
+   (	"FAQNO" NUMBER, 
+	"FAQQ" VARCHAR2(999 BYTE), 
+	"FAQA" VARCHAR2(999 BYTE)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "SYSTEM" ;
+--------------------------------------------------------
+--  DDL for Table MEMBER
+--------------------------------------------------------
+
+  CREATE TABLE "MEDIPAW"."MEMBER" 
+   (	"ID" VARCHAR2(50 BYTE), 
+	"NAME" VARCHAR2(50 BYTE), 
+	"PASSWD" VARCHAR2(200 BYTE), 
+	"ADDR1" VARCHAR2(200 BYTE), 
+	"PHONE" VARCHAR2(50 BYTE), 
+	"EMAIL" VARCHAR2(200 BYTE), 
+	"BIRTH" DATE, 
+	"REGDATE" DATE DEFAULT SYSDATE, 
+	"ENABLED" CHAR(1 BYTE)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "SYSTEM" ;
+--------------------------------------------------------
+--  DDL for Table MEMBER_AUTH
+--------------------------------------------------------
+
+  CREATE TABLE "MEDIPAW"."MEMBER_AUTH" 
+   (	"AUTH" VARCHAR2(50 BYTE), 
+	"ID" VARCHAR2(50 BYTE)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "SYSTEM" ;
+--------------------------------------------------------
+--  DDL for Table PERSISTENT_LOGINS
+--------------------------------------------------------
+
+  CREATE TABLE "MEDIPAW"."PERSISTENT_LOGINS" 
+   (	"SERIES" VARCHAR2(64 BYTE), 
+	"USERNAME" VARCHAR2(64 BYTE), 
+	"TOKEN" VARCHAR2(64 BYTE), 
+	"LAST_USED" VARCHAR2(64 BYTE)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "SYSTEM" ;
+REM INSERTING into MEDIPAW.FAQ
+SET DEFINE OFF;
+Insert into MEDIPAW.FAQ (FAQNO,FAQQ,FAQA) values (11111,'머에요?','이거에요1');
+Insert into MEDIPAW.FAQ (FAQNO,FAQQ,FAQA) values (1212,'ㅇㅇㅇ','ㄴㄴ');
+REM INSERTING into MEDIPAW.MEMBER
+SET DEFINE OFF;
+Insert into MEDIPAW.MEMBER (ID,NAME,PASSWD,ADDR1,PHONE,EMAIL,BIRTH,REGDATE,ENABLED) values ('test2','test2','$2a$10$tponrBHLoB7StfRgvKv.UuRPGZ3WdXta5Vxgb.WG9A/oD2AFgHogm','s','s','s@s',null,to_date('23/10/23','RR/MM/DD'),'1');
+Insert into MEDIPAW.MEMBER (ID,NAME,PASSWD,ADDR1,PHONE,EMAIL,BIRTH,REGDATE,ENABLED) values ('test3','ss','$2a$10$ikoudeYrhNPXN7V8pMmLTupEoQSErJzyrlV2ko8tFHuXGO5DOJrFO','dd','dd','dd@gmail.com',null,to_date('23/10/23','RR/MM/DD'),'1');
+Insert into MEDIPAW.MEMBER (ID,NAME,PASSWD,ADDR1,PHONE,EMAIL,BIRTH,REGDATE,ENABLED) values ('test5','gg','$2a$10$N3.GbdW6nswUBS5zmnPeEuDilaGyNMGfCniXB1zbEqoFT7m268VV2','ff','ff','ff@ff',null,to_date('23/10/23','RR/MM/DD'),'1');
+Insert into MEDIPAW.MEMBER (ID,NAME,PASSWD,ADDR1,PHONE,EMAIL,BIRTH,REGDATE,ENABLED) values ('test6','test6','$2a$10$IfqYMIQ49F3z0GNE5AYz0uhG45TmK8o6BwkVGWFZvvZtRbqEPJFUW','gg','gg','gg@gg',null,to_date('23/10/23','RR/MM/DD'),'1');
+Insert into MEDIPAW.MEMBER (ID,NAME,PASSWD,ADDR1,PHONE,EMAIL,BIRTH,REGDATE,ENABLED) values ('admin11','관리자','$2a$10$DhQGE9VewUKwYJ5J6Vhxku37PGCXUZgmkwIcw8fJ1PnJ2Ii.Np7tq','관리자','01000000000','admin@gmail.com',null,to_date('23/10/18','RR/MM/DD'),'1');
+Insert into MEDIPAW.MEMBER (ID,NAME,PASSWD,ADDR1,PHONE,EMAIL,BIRTH,REGDATE,ENABLED) values ('test7','ee','$2a$10$apb7l9pcMzwSS7PwVqtRSOWLm.uOS61Np0ygR9Bhq1AmarBzs1fq6','vv','vv','vv@vv',null,to_date('23/10/23','RR/MM/DD'),'1');
+Insert into MEDIPAW.MEMBER (ID,NAME,PASSWD,ADDR1,PHONE,EMAIL,BIRTH,REGDATE,ENABLED) values ('test8','xcc','$2a$10$jOQwOF1oKJVhQMJ4UQ/pR.pc/ktI5Pe3uPnnVHMs.sSxztvPtrko6','cc','cc','cc@cc',null,to_date('23/10/23','RR/MM/DD'),'1');
+Insert into MEDIPAW.MEMBER (ID,NAME,PASSWD,ADDR1,PHONE,EMAIL,BIRTH,REGDATE,ENABLED) values ('test9','test9','$2a$10$EYCaOkc8SCs.b.lOHYhCN.asZ/5ndnKpbrncgztCdrjoNK2DgwpxK','ww','ww','ww@ww',null,to_date('23/10/23','RR/MM/DD'),'1');
+Insert into MEDIPAW.MEMBER (ID,NAME,PASSWD,ADDR1,PHONE,EMAIL,BIRTH,REGDATE,ENABLED) values ('juyung131','김주영','$2a$10$WYZ8BJyhFPR400FBI0V9iekIgt1MSmX3PHbxPSmD6M/1lkNbNaY4e','주소','01067764537','jy_131@naver.com',null,to_date('23/10/19','RR/MM/DD'),'1');
+Insert into MEDIPAW.MEMBER (ID,NAME,PASSWD,ADDR1,PHONE,EMAIL,BIRTH,REGDATE,ENABLED) values ('test10','test10','$2a$10$DN5NGYqNIMWlYDYCSYZi8O8tpACLfYOv0yOP3CzjuKZu1MISYLu9m','sss','ss','ss@ss',null,to_date('23/10/23','RR/MM/DD'),'1');
+Insert into MEDIPAW.MEMBER (ID,NAME,PASSWD,ADDR1,PHONE,EMAIL,BIRTH,REGDATE,ENABLED) values ('dddhhh','김동휘','$2a$10$uc02lCF1vPwUbgk7b88n1.1AbPsk6LgQhFbMSB/mFKo9p6DSL0.uq','서울특별시 마포구 성미산로 ','010-1111-9999','dh2268@naver.com',null,to_date('23/10/23','RR/MM/DD'),'1');
+REM INSERTING into MEDIPAW.MEMBER_AUTH
+SET DEFINE OFF;
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','SS');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','a');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','aa');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_HOSPITAL','s');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_HOSPITAL','qq');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_HOSPITAL','ㅇ');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','juyung131');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_ADMIN','admin11');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','jsjjsjsjsjs');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_HOSPITAL','ggggg');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','gggggg');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','juyung131');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','xofaning9');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','test1');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','aaa111');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','aaaaa');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','test1');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','test1');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','test2');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','test3');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','test4');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','test5');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','test6');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','test7');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','test8');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','test9');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','test10');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','dddhhh');
+Insert into MEDIPAW.MEMBER_AUTH (AUTH,ID) values ('ROLE_MEMBER','qwer1');
+REM INSERTING into MEDIPAW.PERSISTENT_LOGINS
+SET DEFINE OFF;
+Insert into MEDIPAW.PERSISTENT_LOGINS (SERIES,USERNAME,TOKEN,LAST_USED) values ('2NARgqj8UA9b/9JqyQi2oA==','test1','zWN+P2lIEECGF4x9ponI1A==','23/10/23 12:08:19.141000000');
+--------------------------------------------------------
+--  Constraints for Table FAQ
+--------------------------------------------------------
+
+  ALTER TABLE "MEDIPAW"."FAQ" MODIFY ("FAQA" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."FAQ" MODIFY ("FAQQ" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."FAQ" MODIFY ("FAQNO" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table MEMBER
+--------------------------------------------------------
+
+  ALTER TABLE "MEDIPAW"."MEMBER" MODIFY ("ENABLED" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."MEMBER" MODIFY ("REGDATE" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."MEMBER" MODIFY ("EMAIL" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."MEMBER" MODIFY ("PHONE" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."MEMBER" MODIFY ("ADDR1" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."MEMBER" MODIFY ("PASSWD" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."MEMBER" MODIFY ("NAME" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."MEMBER" MODIFY ("ID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table MEMBER_AUTH
+--------------------------------------------------------
+
+  ALTER TABLE "MEDIPAW"."MEMBER_AUTH" MODIFY ("ID" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."MEMBER_AUTH" MODIFY ("AUTH" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table PERSISTENT_LOGINS
+--------------------------------------------------------
+
+  ALTER TABLE "MEDIPAW"."PERSISTENT_LOGINS" MODIFY ("TOKEN" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."PERSISTENT_LOGINS" MODIFY ("USERNAME" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."PERSISTENT_LOGINS" MODIFY ("SERIES" NOT NULL ENABLE);
