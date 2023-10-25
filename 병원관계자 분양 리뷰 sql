@@ -1,0 +1,248 @@
+--------------------------------------------------------
+--  파일이 생성됨 - 월요일-10월-23-2023   
+--------------------------------------------------------
+--------------------------------------------------------
+--  DDL for Table BOONYANG
+--------------------------------------------------------
+
+  CREATE TABLE "BOONYANG" 
+   (	"BYNO" NUMBER, 
+	"STATE" VARCHAR2(20) DEFAULT '분양중', 
+	"KIND" VARCHAR2(20), 
+	"GENDER" VARCHAR2(20), 
+	"AGE" NUMBER, 
+	"TITLE" VARCHAR2(50), 
+	"CONTENT" VARCHAR2(500), 
+	"REGDATE" DATE DEFAULT SYSDATE, 
+	"REPLYCNT" NUMBER DEFAULT 0, 
+	"ID" VARCHAR2(50), 
+	"BYIMG" VARCHAR2(200)
+   ) ;
+--------------------------------------------------------
+--  DDL for Table BY_REPLY
+--------------------------------------------------------
+
+  CREATE TABLE "BY_REPLY" 
+   (	"BYRNO" NUMBER, 
+	"REPLY" VARCHAR2(400), 
+	"REGDATE" DATE DEFAULT SYSDATE, 
+	"BYNO" NUMBER, 
+	"ID" VARCHAR2(50)
+   ) ;
+--------------------------------------------------------
+--  DDL for Table REVIEW
+--------------------------------------------------------
+
+  CREATE TABLE "REVIEW" 
+   (	"RNO" NUMBER, 
+	"REGDATE" DATE DEFAULT SYSDATE, 
+	"STAR" NUMBER, 
+	"TITLE" VARCHAR2(50), 
+	"CONTENT" VARCHAR2(400), 
+	"ANIMALHOSP_NO" NUMBER, 
+	"ID" VARCHAR2(50), 
+	"TNO" NUMBER
+   ) ;
+--------------------------------------------------------
+--  DDL for Table STAFF
+--------------------------------------------------------
+
+  CREATE TABLE "STAFF" 
+   (	"SID" VARCHAR2(50), 
+	"SPW" VARCHAR2(100), 
+	"SNAME" VARCHAR2(50), 
+	"SPHONE" VARCHAR2(50), 
+	"SEMAIL" VARCHAR2(50), 
+	"COMPANYNUM" VARCHAR2(50), 
+	"REGDATE" DATE DEFAULT SYSDATE, 
+	"ENABLED" CHAR(1) DEFAULT 1, 
+	"IMG" VARCHAR2(100)
+   ) ;
+--------------------------------------------------------
+--  DDL for Table STAFF_AUTH
+--------------------------------------------------------
+
+  CREATE TABLE "STAFF_AUTH" 
+   (	"SID" VARCHAR2(50), 
+	"AUTH" VARCHAR2(50) DEFAULT NULL
+   ) ;
+REM INSERTING into BOONYANG
+SET DEFINE OFF;
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (32,'분양완료','고슴도치','암컷',1,'고슴도치 키우실분 ㅠㅠ','고슴도치 키우실분 ㅠㅠ',to_date('23/10/22','RR/MM/DD'),0,'kimnara','0dfdb519-feb6-4250-9b5b-ecf110824e16_스크린샷 2023-10-22 112723.png');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (33,'분양중','강아지','암컷',1,'너무너무 귀엽죠','너무너무 귀엽죠',to_date('23/10/22','RR/MM/DD'),0,'kimnara','37e52d1b-4178-4ff2-8f64-01a503b5b2c1_스크린샷 2023-10-22 115502.png');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (34,'분양완료','강아지','수컷',1,'포메라니안이에요','포메라니안이에요',to_date('23/10/22','RR/MM/DD'),0,'kimnara','277c0e3c-9e03-4bde-9fac-f31001e1632a_스크린샷 2023-10-22 115502.png');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (35,'분양중','강아지','암컷',1,'순둥이입니다','순둥이입니다',to_date('23/10/22','RR/MM/DD'),0,'kimnara','d9ba1d4a-5ff8-420c-a127-46c769f41ccc_스크린샷 2023-10-22 115502.png');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (36,'분양완료','고양이','수컷',3,'활발한 아이에요','활발한 아이에요',to_date('23/10/22','RR/MM/DD'),0,'test','7dad7730-a168-48b9-adde-c2a650df36cf_스크린샷 2023-10-22 112723.png');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (37,'분양중','고슴도치','암컷',1,'testt','test',to_date('23/10/22','RR/MM/DD'),0,'kimnara','e11a2a7c-79c4-4402-9999-b46796471822_스크린샷 2023-10-22 112723.png');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (38,'분양중','강아지','암컷',2,'순둥ㅇ이에요','순둥ㅇ이에요gggg',to_date('23/10/22','RR/MM/DD'),1,'test2','816d29fd-ea3f-470a-954b-74f268b2ac2d_스크린샷 2023-10-22 115502.png');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (39,'분양중','강아지','수컷',2,'순둥ㅇ이에요','순둥ㅇ이에요',to_date('23/10/22','RR/MM/DD'),0,'test','1ab2faae-8165-4739-bca6-39fede7bbd30_스크린샷 2023-10-22 130440.png');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (40,'분양중','강아지','암컷',2,'순둥ㅇ이에요','순둥ㅇ이에요',to_date('23/10/22','RR/MM/DD'),0,'test','47fa0a8e-3fbc-4b86-ad07-343446b3b30b_스크린샷 2023-10-22 130440.png');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (41,'분양중','강아지','암컷',2,'순둥ㅇ이에요','순둥ㅇ이에요',to_date('23/10/22','RR/MM/DD'),0,'test','da49fea9-50bb-4ccb-bf42-9d4e22fa2c58_스크린샷 2023-10-22 115502.png');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (43,'분양중','고슴도치','암컷',2,'순둥ㅇ이에요','순둥ㅇ이에요',to_date('23/10/22','RR/MM/DD'),1,'test','cd76c6c2-2635-41c8-9bd3-788ae7129abb_스크린샷 2023-10-22 112723.png');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (44,'분양중','강아지','수컷',1,'활발한 아이에요','활발한 아이에요',to_date('23/10/22','RR/MM/DD'),0,'test2','1702dbca-7585-4f90-9e3e-02d7dcdf1ce0_스크린샷 2023-10-22 115502.png');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (46,'분양중','강아지','암컷',1,'ㅎㅇㅎㅇ','포메라니안이에요',to_date('23/10/22','RR/MM/DD'),16,'kimnara','277c0e3c-9e03-4bde-9fac-f31001e1632a_스크린샷 2023-10-22 115502.png');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (2,'분양중','고양이','수컷',3,'귀여운샴','활발한 아이에요',to_date('23/10/20','RR/MM/DD'),0,'test','bbb.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (1,'분양중','고양이','수컷',3,'귀여운샴','활발한 아이에요',to_date('23/10/20','RR/MM/DD'),0,'test','bbb.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (3,'분양중','고양이','수컷',3,'귀여운샴','활발한 아이에요',to_date('23/10/20','RR/MM/DD'),0,'test','bbb.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (4,'분양중','고양이','수컷',3,'귀여운샴','활발한 아이에요',to_date('23/10/20','RR/MM/DD'),0,'test','bbb.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (5,'분양중','고양이','수컷',3,'귀여운샴','활발한 아이에요',to_date('23/10/20','RR/MM/DD'),0,'test','bbb.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (6,'분양중','고양이','수컷',3,'귀여운샴','활발한 아이에요',to_date('23/10/20','RR/MM/DD'),0,'test','bbb.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (7,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test','aaa.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (8,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test','aaa.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (9,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test','aaa.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (10,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test','aaa.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (11,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test','aaa.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (12,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test','aaa.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (13,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test','aaa.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (14,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test','aaa.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (15,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test','aaa.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (16,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test','aaa.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (23,'분양중','고양이','수컷',3,'귀여운샴','활발한 아이에요',to_date('23/10/20','RR/MM/DD'),0,'test2','bbb.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (24,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test2','aaa.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (25,'분양중','고양이','수컷',3,'귀여운샴','활발한 아이에요',to_date('23/10/20','RR/MM/DD'),0,'test2','bbb.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (26,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test2','aaa.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (27,'분양중','고양이','수컷',3,'귀여운샴','활발한 아이에요',to_date('23/10/20','RR/MM/DD'),0,'test2','bbb.jpg');
+Insert into BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (28,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test2','aaa.jpg');
+REM INSERTING into BY_REPLY
+SET DEFINE OFF;
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (2,'a',to_date('23/10/23','RR/MM/DD'),0,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (3,'dd',to_date('23/10/23','RR/MM/DD'),0,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (4,'dd',to_date('23/10/23','RR/MM/DD'),38,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (19,'sdfsd',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (6,'aaa',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (7,'hh',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (8,'test',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (9,'resd',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (10,'dddddddddd',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (11,'dsasdf',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (12,'ss',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (14,'dddd',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (15,'dd',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (16,'ggggggg',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (20,'저용',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (18,'aaaaaaaa',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (21,'hhhhhhh',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (22,'asdfasdf',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (23,'gege',to_date('23/10/23','RR/MM/DD'),46,'kimnara');
+Insert into BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (25,'귀엽다',to_date('23/10/23','RR/MM/DD'),43,'qqqqq');
+REM INSERTING into REVIEW
+SET DEFINE OFF;
+Insert into REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (100,to_date('23/10/23','RR/MM/DD'),4,'친절해요','꼼꼼 친절 ',1,'kimnara',100);
+Insert into REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (1,to_date('23/10/23','RR/MM/DD'),5,'좋아요','또 올게요',0,'kimnara',100);
+Insert into REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (2,to_date('23/10/23','RR/MM/DD'),5,'좋아요','또 올게요',1,'kimnara',100);
+Insert into REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (3,to_date('23/10/23','RR/MM/DD'),5,'와아','또 올게요',1,'kimnara',100);
+Insert into REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (7,to_date('23/10/23','RR/MM/DD'),4,'ㅎㅎ','ㅇㅇㅇㅇㅇㅇㅇ',1,'qqqqq',100);
+Insert into REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (5,to_date('23/10/23','RR/MM/DD'),2,'별로야','오늘 뭔가 불친절',1,'kimnara',100);
+Insert into REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (6,to_date('23/10/23','RR/MM/DD'),5,'좋아요~~','의사쌤이 친절해요',1,'kimnara',100);
+REM INSERTING into STAFF
+SET DEFINE OFF;
+Insert into STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('jimin12','$2a$10$ztRGbnrG61AqiJQdPrBbK.k9FU7K1otm758awrCNpJfuBODNz3qrW','김지민','01048632111','jj@daum.com','2128173385',to_date('23/10/18','RR/MM/DD'),'1','348f3273-a5b3-473b-b3c0-9f612ff96c32_스크린샷 2023-10-18 210959.png');
+Insert into STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('admin','$2a$10$.acHUmo.NZGBiWGVNqBt4uL0Xtf1fHWhu5gf7k6.sR1sINs29uLom','관리자','01023459999','admin@naver.com','2128173385',to_date('23/10/19','RR/MM/DD'),'1','50cfceb0-c152-4b0f-962a-9142115e990b_스크린샷 2023-10-18 215714.png');
+Insert into STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('woori123','$2a$10$q2anMRTtSTs8eiS//gFShO2yPSP0u6N/awJFL7TItr.mTxQT4wEVK','김우리','01085732111','woori@naver.com','2128173385',to_date('23/10/18','RR/MM/DD'),'1','스크린샷 2023-10-13 110419.png');
+Insert into STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('hong122','$2a$10$nikf4yHuqZQtvAT0.hZmq..1avMdbc1dtslKOviVT3nM4ttM1caZe','홍길동','01023432222','hhh@gmail.com','2128173385',to_date('23/10/18','RR/MM/DD'),'1','스크린샷 2023-10-12 141547.png');
+Insert into STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('ddd1111','$2a$10$NkSegnCtEggTglemXzC90upsFcncr6XhlZyWBaWzLGZwFizAK9D3G','김동휘','01023451111','gdfs@daum.com','2128173385',to_date('23/10/19','RR/MM/DD'),'1','24309b12-b79d-40e3-83d1-076e716eeff9_스크린샷 2023-10-18 211005.png');
+Insert into STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('qqqq22','$2a$10$jNV6JRGKbj96FVa2K5RhcuLxjSqS18dXX6P4W6lxRt23YZQVIHNPm','고길동','01023451111','asdf@gmail.com','2128173385',to_date('23/10/18','RR/MM/DD'),'1','스크린샷 2023-10-12 125042.png');
+Insert into STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('aaa2333','$2a$10$T.gSZyG5gQYrNG1ZN0ibHO56ePqyJlNcFTwgHNs9erzO7JGIoQJVq','김나리','01023451111','test1@gmail.com','2128173385',to_date('23/10/18','RR/MM/DD'),'1','스크린샷 2023-10-13 110419.png');
+Insert into STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('qwerew','$2a$10$k3i7YkOG/vsc9j/Oiu3vQeMd6Ri5rxwgWi4NcXzoECZSzUAVDagce','테스트','01023451111','test1@gmail.com','2128173385',to_date('23/10/19','RR/MM/DD'),'1','2093626c-ad76-4888-85f3-c380a9b3ce5f_스크린샷 2023-10-18 210959.png');
+Insert into STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('kimnara','$2a$10$.cfckxTlCieBv7Kgcll3Xet339oyD.VYyrwHdJzCrkeTux/aCRr8e','김나라','01023451111','asd@naver.com','2128173385',to_date('23/10/19','RR/MM/DD'),'1','8e533706-c32d-49f2-a779-3a932c29f37c_스크린샷 2023-10-18 211010.png');
+Insert into STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('asdfs','$2a$10$.3wAdBHawnSGjoD037RgSewwIncoB9fh03F5BddphA7qq6/LhJG.u','김호영','01023451111','asd@gmail.com','2128173385',to_date('23/10/22','RR/MM/DD'),'1','1e26ec94-d53a-45e7-adb7-a057305831b8_스크린샷 2023-10-18 210959.png');
+Insert into STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('asdfff','$2a$10$d8ic/2KCN5xBwFU/mBByI.SOwy9hO7UqXgCgFNGzm.B1nBaJJGW8y','변운섭','01035555333','asdff@gmail.com','2128173385',to_date('23/10/23','RR/MM/DD'),'1','b58a1a3d-6b79-42fe-8550-2c4a129d011a_스크린샷 2023-10-23 144111.png');
+Insert into STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('qqqqq','$2a$10$HKpY/7jQdKGErq8HQnz/velnHAHpQJLzfOYA.cDNcSHm73RpOONHa','강아지','01067567666','asd@naver.com','2128173385',to_date('23/10/18','RR/MM/DD'),'1','b7a15064-0759-4420-8443-d97450b72dd3_스크린샷 2023-10-18 210959.png');
+REM INSERTING into STAFF_AUTH
+SET DEFINE OFF;
+Insert into STAFF_AUTH (SID,AUTH) values ('qwerrr','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('ddd1111','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('woori123','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('hong122','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('jimin12','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('123123','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('testttt','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('asd2e4','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('qqqq22','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('aaa2333','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('ddd1111','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('qwerew','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('image','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('qqqqq','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('admin','ROLE_ADMIN');
+Insert into STAFF_AUTH (SID,AUTH) values ('kimnara','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('asdfs','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('asdfff','ROLE_STAFF');
+Insert into STAFF_AUTH (SID,AUTH) values ('ddd1111','ROLE_STAFF');
+--------------------------------------------------------
+--  Constraints for Table BOONYANG
+--------------------------------------------------------
+
+  ALTER TABLE "BOONYANG" ADD CONSTRAINT "PK_BOONYANG" PRIMARY KEY ("BYNO") ENABLE;
+  ALTER TABLE "BOONYANG" MODIFY ("ID" NOT NULL ENABLE);
+  ALTER TABLE "BOONYANG" MODIFY ("BYIMG" NOT NULL ENABLE);
+  ALTER TABLE "BOONYANG" MODIFY ("REPLYCNT" NOT NULL ENABLE);
+  ALTER TABLE "BOONYANG" MODIFY ("REGDATE" NOT NULL ENABLE);
+  ALTER TABLE "BOONYANG" MODIFY ("CONTENT" NOT NULL ENABLE);
+  ALTER TABLE "BOONYANG" MODIFY ("TITLE" NOT NULL ENABLE);
+  ALTER TABLE "BOONYANG" MODIFY ("AGE" NOT NULL ENABLE);
+  ALTER TABLE "BOONYANG" MODIFY ("GENDER" NOT NULL ENABLE);
+  ALTER TABLE "BOONYANG" MODIFY ("KIND" NOT NULL ENABLE);
+  ALTER TABLE "BOONYANG" MODIFY ("STATE" NOT NULL ENABLE);
+  ALTER TABLE "BOONYANG" MODIFY ("BYNO" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table BY_REPLY
+--------------------------------------------------------
+
+  ALTER TABLE "BY_REPLY" ADD CONSTRAINT "PK_BY_REPLY" PRIMARY KEY ("BYRNO") ENABLE;
+  ALTER TABLE "BY_REPLY" MODIFY ("ID" NOT NULL ENABLE);
+  ALTER TABLE "BY_REPLY" MODIFY ("BYNO" NOT NULL ENABLE);
+  ALTER TABLE "BY_REPLY" MODIFY ("REGDATE" NOT NULL ENABLE);
+  ALTER TABLE "BY_REPLY" MODIFY ("REPLY" NOT NULL ENABLE);
+  ALTER TABLE "BY_REPLY" MODIFY ("BYRNO" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table REVIEW
+--------------------------------------------------------
+
+  ALTER TABLE "REVIEW" MODIFY ("TNO" NOT NULL ENABLE);
+  ALTER TABLE "REVIEW" ADD CONSTRAINT "PK_REVIEW" PRIMARY KEY ("RNO") ENABLE;
+  ALTER TABLE "REVIEW" MODIFY ("ID" NOT NULL ENABLE);
+  ALTER TABLE "REVIEW" MODIFY ("ANIMALHOSP_NO" NOT NULL ENABLE);
+  ALTER TABLE "REVIEW" MODIFY ("CONTENT" NOT NULL ENABLE);
+  ALTER TABLE "REVIEW" MODIFY ("TITLE" NOT NULL ENABLE);
+  ALTER TABLE "REVIEW" MODIFY ("STAR" NOT NULL ENABLE);
+  ALTER TABLE "REVIEW" MODIFY ("REGDATE" NOT NULL ENABLE);
+  ALTER TABLE "REVIEW" MODIFY ("RNO" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table STAFF
+--------------------------------------------------------
+
+  ALTER TABLE "STAFF" ADD CONSTRAINT "PK_STAFF" PRIMARY KEY ("SID") ENABLE;
+  ALTER TABLE "STAFF" MODIFY ("IMG" NOT NULL ENABLE);
+  ALTER TABLE "STAFF" MODIFY ("ENABLED" NOT NULL ENABLE);
+  ALTER TABLE "STAFF" MODIFY ("REGDATE" NOT NULL ENABLE);
+  ALTER TABLE "STAFF" MODIFY ("COMPANYNUM" NOT NULL ENABLE);
+  ALTER TABLE "STAFF" MODIFY ("SEMAIL" NOT NULL ENABLE);
+  ALTER TABLE "STAFF" MODIFY ("SPHONE" NOT NULL ENABLE);
+  ALTER TABLE "STAFF" MODIFY ("SNAME" NOT NULL ENABLE);
+  ALTER TABLE "STAFF" MODIFY ("SPW" NOT NULL ENABLE);
+  ALTER TABLE "STAFF" MODIFY ("SID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table STAFF_AUTH
+--------------------------------------------------------
+
+  ALTER TABLE "STAFF_AUTH" MODIFY ("AUTH" NOT NULL ENABLE);
+  ALTER TABLE "STAFF_AUTH" MODIFY ("SID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Ref Constraints for Table BOONYANG
+--------------------------------------------------------
+
+  ALTER TABLE "BOONYANG" ADD CONSTRAINT "FK_BOONYANG_MEMBER_ID" FOREIGN KEY ("ID")
+	  REFERENCES "MEMBER" ("ID") ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table BY_REPLY
+--------------------------------------------------------
+
+  ALTER TABLE "BY_REPLY" ADD CONSTRAINT "FK_BY_REPLY_MEMBER_ID" FOREIGN KEY ("ID")
+	  REFERENCES "MEMBER" ("ID") ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table REVIEW
+--------------------------------------------------------
+
+  ALTER TABLE "REVIEW" ADD CONSTRAINT "FK_REVIEW_MEMBER_ID" FOREIGN KEY ("ID")
+	  REFERENCES "MEMBER" ("ID") ENABLE;
