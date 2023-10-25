@@ -134,11 +134,11 @@
         <br><br><br><br><br>
         <a href="/member/myPage"><input type="button" value="MY PAGE" id = "pageMenu"></a><br>
         <input type="button" value="MY REVIEW" id = "pageMenu"><br>
-        <input type="button" value="내 즐겨찾기" id = "pageMenu"><br>
+        <a href="/mark/list"><input type="button" value="내 즐겨찾기" id = "pageMenu"></a><br>
         <input type="button" value="내 찜목록" id = "pageMenu"><br>
-        <input type="button" value="예약 내역" id = "pageMenu"><br>
-        <input type="button" value="진료 내역" id = "pageMenu"><br>
-        <input type="button" value="실종신고" id = "pageMenu"><br>
+        <a href="/reserv/listUser"><input type="button" value="예약 내역" id = "pageMenu"></a><br>
+        <a href="/treat/listUser"><input type="button" value="진료 내역" id = "pageMenu"></a><br>
+        <a href="/siljong/list"><input type="button" value="내가 쓴 실종 신고 글" id = "pageMenu"></a><br>
         <input type="button" value="자랑" id = "pageMenu"><br>
         <input type="button" value="커넥팅" id = "pageMenu"><br>
         <input type="button" value="분양" id = "pageMenu"><br>
