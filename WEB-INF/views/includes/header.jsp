@@ -119,7 +119,11 @@
   <div style="display: flex; align-items: center;">
     <span><sec:authentication property="principal.username"/></span>
     <span>님 환영합니다!</span>
-      <a href="/member/myPage">My Page</a>
+
+    <sec:authorize access="hasAnyRole('ROLE_MEMBER', 'ROLE_ADMIN')">
+  <a href="/member/myPage">My Page</a>
+</sec:authorize>
+
     
     <!-- security적용할 땐 action을 무조건! /login으로 해야 함, username, Password도 무조건! -->
     <form role="form"  action="/customLogout" method="post" style="margin-left: 10px;">
