@@ -1,0 +1,4 @@
+병원관계자 회원가입할 때 사업자번호 2128173385 //아는 사업자번호 있으면 그걸로 해도 됨
+** 사업자정보조회 안되는 경우 http://cors-anywhere.herokuapp.com/
+request temporary access 버튼 누르고 실행하면 됨 
+크롬 자체에서 보안문제로 api 호출할 때 막는거라서 필수
