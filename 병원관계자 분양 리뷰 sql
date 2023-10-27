@@ -1,3 +1,21 @@
+------------------------------------------
+2023-10-27 분양사진첨부 테이블 추가
+-----------------------------------------
+  CREATE TABLE "MEDIPAW"."BY_ATTACH" 
+   (	"BYNO" NUMBER, 
+	"UUID" VARCHAR2(100 BYTE), 
+	"UPFOLDER" VARCHAR2(200 BYTE), 
+	"FILENAME" VARCHAR2(100 BYTE)
+   ) ;
+
+
+
+  ALTER TABLE "MEDIPAW"."BY_ATTACH" MODIFY ("FILENAME" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BY_ATTACH" MODIFY ("UPFOLDER" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BY_ATTACH" MODIFY ("UUID" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BY_ATTACH" MODIFY ("BYNO" NOT NULL ENABLE);
+
+
 --------------------------------------------------------
 --  파일이 생성됨 - 월요일-10월-23-2023   
 --------------------------------------------------------
