@@ -1,0 +1,382 @@
+--------------------------------------------------------
+--  파일이 생성됨 - 수요일-11월-01-2023   
+--------------------------------------------------------
+
+--------------------------------------------------------
+--  DDL for Table BOONYANG
+--------------------------------------------------------
+
+  CREATE TABLE "MEDIPAW"."BOONYANG" 
+   (	"BYNO" NUMBER, 
+	"STATE" VARCHAR2(20 BYTE) DEFAULT '분양중', 
+	"KIND" VARCHAR2(50 BYTE), 
+	"GENDER" VARCHAR2(20 BYTE), 
+	"AGE" NUMBER, 
+	"TITLE" VARCHAR2(100 BYTE), 
+	"CONTENT" VARCHAR2(500 BYTE), 
+	"REGDATE" DATE DEFAULT SYSDATE, 
+	"REPLYCNT" NUMBER DEFAULT 0, 
+	"ID" VARCHAR2(50 BYTE), 
+	"BYIMG" VARCHAR2(200 BYTE)
+   ) ;
+--------------------------------------------------------
+--  DDL for Table BY_ATTACH
+--------------------------------------------------------
+
+  CREATE TABLE "MEDIPAW"."BY_ATTACH" 
+   (	"BYNO" NUMBER, 
+	"UUID" VARCHAR2(100 BYTE), 
+	"UPFOLDER" VARCHAR2(200 BYTE), 
+	"FILENAME" VARCHAR2(100 BYTE)
+   ) ;
+--------------------------------------------------------
+--  DDL for Table BY_REPLY
+--------------------------------------------------------
+
+  CREATE TABLE "MEDIPAW"."BY_REPLY" 
+   (	"BYRNO" NUMBER, 
+	"REPLY" VARCHAR2(400 BYTE), 
+	"REGDATE" DATE DEFAULT SYSDATE, 
+	"BYNO" NUMBER, 
+	"ID" VARCHAR2(50 BYTE)
+   ) ;
+--------------------------------------------------------
+--  DDL for Table REVIEW
+--------------------------------------------------------
+
+  CREATE TABLE "MEDIPAW"."REVIEW" 
+   (	"RNO" NUMBER, 
+	"REGDATE" DATE DEFAULT SYSDATE, 
+	"STAR" NUMBER, 
+	"TITLE" VARCHAR2(50 BYTE), 
+	"CONTENT" VARCHAR2(400 BYTE), 
+	"ANIMALHOSP_NO" NUMBER, 
+	"ID" VARCHAR2(50 BYTE), 
+	"TNO" NUMBER
+   ) ;
+--------------------------------------------------------
+--  DDL for Table STAFF
+--------------------------------------------------------
+
+  CREATE TABLE "MEDIPAW"."STAFF" 
+   (	"SID" VARCHAR2(50 BYTE), 
+	"SPW" VARCHAR2(100 BYTE), 
+	"SNAME" VARCHAR2(50 BYTE), 
+	"SPHONE" VARCHAR2(50 BYTE), 
+	"SEMAIL" VARCHAR2(50 BYTE), 
+	"COMPANYNUM" VARCHAR2(50 BYTE), 
+	"REGDATE" DATE DEFAULT SYSDATE, 
+	"ENABLED" CHAR(1 BYTE) DEFAULT 1, 
+	"IMG" VARCHAR2(100 BYTE)
+   ) ;
+--------------------------------------------------------
+--  DDL for Table STAFF_AUTH
+--------------------------------------------------------
+
+  CREATE TABLE "MEDIPAW"."STAFF_AUTH" 
+   (	"SID" VARCHAR2(50 BYTE), 
+	"AUTH" VARCHAR2(50 BYTE) DEFAULT NULL
+   ) ;
+
+--------------------------------------------------------
+--  DDL for Sequence BYNO_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "MEDIPAW"."BYNO_SEQ"  MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 101 CACHE 20 NOORDER  CYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence BYRNO_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "MEDIPAW"."BYRNO_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 31 NOCACHE  NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence RNO_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "MEDIPAW"."RNO_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 34 NOCACHE  NOORDER  NOCYCLE ;
+
+--------------------------------------------------------
+--  DDL for Index IDX_NAME_ID
+--------------------------------------------------------
+
+  CREATE INDEX "MEDIPAW"."IDX_NAME_ID" ON "MEDIPAW"."STAFF" ("SNAME", "SID") 
+  ;
+--------------------------------------------------------
+--  DDL for Trigger ADD_STAFF_AUTH
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "MEDIPAW"."ADD_STAFF_AUTH" 
+AFTER INSERT ON staff
+FOR EACH ROW
+BEGIN
+    INSERT INTO staff_auth (sid, auth) VALUES (:NEW.sid, 'ROLE_STAFF');
+END;
+/
+ALTER TRIGGER "MEDIPAW"."ADD_STAFF_AUTH" ENABLE;
+--------------------------------------------------------
+--  DDL for Trigger REMOVE_STAFF_AUTH
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "MEDIPAW"."REMOVE_STAFF_AUTH" 
+AFTER DELETE ON staff
+FOR EACH ROW
+BEGIN
+    DELETE FROM staff_auth WHERE sid = :OLD.sid;
+END;
+/
+ALTER TRIGGER "MEDIPAW"."REMOVE_STAFF_AUTH" ENABLE;
+--------------------------------------------------------
+--  DDL for Trigger TRIGGER_REVIEW
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "MEDIPAW"."TRIGGER_REVIEW" 
+AFTER INSERT
+ON review
+FOR EACH ROW
+BEGIN
+    UPDATE animalhosp_main SET rv_cnt = rv_cnt + 1 WHERE animalhosp_no = :NEW.animalhosp_no;
+    UPDATE animalhosp_main SET star_total = star_total + :NEW.star WHERE animalhosp_no = :NEW.animalhosp_no;
+END;
+/
+ALTER TRIGGER "MEDIPAW"."TRIGGER_REVIEW" ENABLE;
+--------------------------------------------------------
+--  DDL for Trigger TRIGGER_REVIEW_DELETE
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "MEDIPAW"."TRIGGER_REVIEW_DELETE" 
+AFTER DELETE ON review
+FOR EACH ROW
+BEGIN
+    UPDATE animalhosp_main SET rv_cnt = rv_cnt - 1, star_total = star_total - :OLD.star WHERE animalhosp_no = :OLD.animalhosp_no;
+END;
+
+
+--------------------------------------------------------
+--  DDL for Trigger TRIGGER_REVIEW_UPDATE
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "MEDIPAW"."TRIGGER_REVIEW_UPDATE" 
+AFTER UPDATE ON review
+FOR EACH ROW
+BEGIN
+    UPDATE animalhosp_main SET star_total = star_total - :OLD.star + :NEW.star WHERE animalhosp_no = :OLD.animalhosp_no;
+END;
+
+--------------------------------------------------------
+--  DDL for Trigger TRIGGER_REVIEW
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "MEDIPAW"."TRIGGER_REVIEW" 
+AFTER INSERT
+ON review
+FOR EACH ROW
+BEGIN
+    UPDATE animalhosp_main SET rv_cnt = rv_cnt + 1 WHERE animalhosp_no = :NEW.animalhosp_no;
+    UPDATE animalhosp_main SET star_total = star_total + :NEW.star WHERE animalhosp_no = :NEW.animalhosp_no;
+END;
+
+--------------------------------------------------------
+--  DDL for Trigger TRIGGER_REVIEW_UPDATE
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "MEDIPAW"."TRIGGER_REVIEW_UPDATE" 
+AFTER UPDATE ON review
+FOR EACH ROW
+BEGIN
+    UPDATE animalhosp_main SET star_total = star_total - :OLD.star + :NEW.star WHERE animalhosp_no = :OLD.animalhosp_no;
+END;
+
+--------------------------------------------------------
+--  DDL for Trigger TRIGGER_REVIEW_DELETE
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "MEDIPAW"."TRIGGER_REVIEW_DELETE" 
+AFTER DELETE ON review
+FOR EACH ROW
+BEGIN
+    UPDATE animalhosp_main SET rv_cnt = rv_cnt - 1, star_total = star_total - :OLD.star WHERE animalhosp_no = :OLD.animalhosp_no;
+END;
+
+
+--------------------------------------------------------
+--  DDL for Trigger ADD_STAFF_AUTH
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "MEDIPAW"."ADD_STAFF_AUTH" 
+AFTER INSERT ON staff
+FOR EACH ROW
+BEGIN
+    INSERT INTO staff_auth (sid, auth) VALUES (:NEW.sid, 'ROLE_STAFF');
+END;
+
+--------------------------------------------------------
+--  DDL for Trigger REMOVE_STAFF_AUTH
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "MEDIPAW"."REMOVE_STAFF_AUTH" 
+AFTER DELETE ON staff
+FOR EACH ROW
+BEGIN
+    DELETE FROM staff_auth WHERE sid = :OLD.sid;
+END;
+
+
+--------------------------------------------------------
+--  Constraints for Table BOONYANG
+--------------------------------------------------------
+
+  ALTER TABLE "MEDIPAW"."BOONYANG" ADD CONSTRAINT "PK_BOONYANG" PRIMARY KEY ("BYNO") ENABLE;
+  ALTER TABLE "MEDIPAW"."BOONYANG" MODIFY ("ID" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BOONYANG" MODIFY ("REPLYCNT" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BOONYANG" MODIFY ("REGDATE" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BOONYANG" MODIFY ("CONTENT" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BOONYANG" MODIFY ("TITLE" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BOONYANG" MODIFY ("AGE" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BOONYANG" MODIFY ("GENDER" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BOONYANG" MODIFY ("KIND" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BOONYANG" MODIFY ("STATE" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BOONYANG" MODIFY ("BYNO" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table BY_ATTACH
+--------------------------------------------------------
+
+  ALTER TABLE "MEDIPAW"."BY_ATTACH" MODIFY ("FILENAME" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BY_ATTACH" MODIFY ("UPFOLDER" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BY_ATTACH" MODIFY ("UUID" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BY_ATTACH" MODIFY ("BYNO" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table BY_REPLY
+--------------------------------------------------------
+
+  ALTER TABLE "MEDIPAW"."BY_REPLY" ADD CONSTRAINT "PK_BY_REPLY" PRIMARY KEY ("BYRNO") ENABLE;
+  ALTER TABLE "MEDIPAW"."BY_REPLY" MODIFY ("ID" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BY_REPLY" MODIFY ("BYNO" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BY_REPLY" MODIFY ("REGDATE" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BY_REPLY" MODIFY ("REPLY" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."BY_REPLY" MODIFY ("BYRNO" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table REVIEW
+--------------------------------------------------------
+
+  ALTER TABLE "MEDIPAW"."REVIEW" MODIFY ("TNO" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."REVIEW" ADD CONSTRAINT "PK_REVIEW" PRIMARY KEY ("RNO") ENABLE;
+  ALTER TABLE "MEDIPAW"."REVIEW" MODIFY ("ID" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."REVIEW" MODIFY ("ANIMALHOSP_NO" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."REVIEW" MODIFY ("CONTENT" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."REVIEW" MODIFY ("TITLE" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."REVIEW" MODIFY ("STAR" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."REVIEW" MODIFY ("REGDATE" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."REVIEW" MODIFY ("RNO" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table STAFF
+--------------------------------------------------------
+
+  ALTER TABLE "MEDIPAW"."STAFF" ADD CONSTRAINT "PK_STAFF" PRIMARY KEY ("SID") ENABLE;
+  ALTER TABLE "MEDIPAW"."STAFF" MODIFY ("IMG" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."STAFF" MODIFY ("ENABLED" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."STAFF" MODIFY ("REGDATE" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."STAFF" MODIFY ("COMPANYNUM" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."STAFF" MODIFY ("SEMAIL" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."STAFF" MODIFY ("SPHONE" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."STAFF" MODIFY ("SNAME" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."STAFF" MODIFY ("SPW" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."STAFF" MODIFY ("SID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table STAFF_AUTH
+--------------------------------------------------------
+
+  ALTER TABLE "MEDIPAW"."STAFF_AUTH" MODIFY ("AUTH" NOT NULL ENABLE);
+  ALTER TABLE "MEDIPAW"."STAFF_AUTH" MODIFY ("SID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Ref Constraints for Table BOONYANG
+--------------------------------------------------------
+
+  ALTER TABLE "MEDIPAW"."BOONYANG" ADD CONSTRAINT "FK_BOONYANG_MEMBER" FOREIGN KEY ("ID")
+	  REFERENCES "MEDIPAW"."MEMBER" ("ID") ON DELETE CASCADE ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table BY_REPLY
+--------------------------------------------------------
+
+  ALTER TABLE "MEDIPAW"."BY_REPLY" ADD CONSTRAINT "FK_BY_REPLY_MEMBER" FOREIGN KEY ("ID")
+	  REFERENCES "MEDIPAW"."MEMBER" ("ID") ON DELETE CASCADE ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table REVIEW
+--------------------------------------------------------
+
+  ALTER TABLE "MEDIPAW"."REVIEW" ADD CONSTRAINT "FK_REVIEW_MEMBER" FOREIGN KEY ("ID")
+	  REFERENCES "MEDIPAW"."MEMBER" ("ID") ON DELETE CASCADE ENABLE;
+
+
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (68,'분양완료','기니피그','수컷',2,'기니피그 분양해요ㅠㅠ','애교쟁이입니다',to_date('23/10/26','RR/MM/DD'),0,'testt','a304ade6-04d9-4de1-877d-20696c020c62_스크린샷 2023-11-01 103032.png');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (70,'분양중','페디그리','수컷',2,'햄스터','키우기좋아요',to_date('23/10/26','RR/MM/DD'),0,'aaaaa','03939cea-558c-4d07-9901-f63298cbc1f4_스크린샷 2023-11-01 102835.png');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (81,'분양중','고슴도치','수컷',2,'데려가실분','작고 소중함',to_date('23/11/01','RR/MM/DD'),0,'testt','7d4cb126-46d8-466e-bcfd-7449ad2fd6bf_스크린샷 2023-10-22 112723.png');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (71,'분양중','브리티시숏헤어','수컷',2,'사람 잘 따라요','사람 잘 따라요',to_date('23/10/26','RR/MM/DD'),0,'aaaaa','73e94476-609d-4a80-a903-f504a34de34f_스크린샷 2023-11-01 102429.png');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (38,'분양중','강아지','암컷',2,'순둥ㅇ이에요','순둥ㅇ이에요gggg',to_date('23/10/22','RR/MM/DD'),1,'test2','816d29fd-ea3f-470a-954b-74f268b2ac2d_스크린샷 2023-10-22 115502.png');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (44,'분양중','강아지','수컷',1,'활발한 아이에요','활발한 아이에요',to_date('23/10/22','RR/MM/DD'),1,'test2','1702dbca-7585-4f90-9e3e-02d7dcdf1ce0_스크린샷 2023-10-22 115502.png');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (48,'분양완료','러시안블루','암컷',1,'애기고양이','분양해요',to_date('23/10/25','RR/MM/DD'),1,'testt','cc6fb796-a5ab-4b43-bb66-47d7f96a427d_스크린샷 2023-11-01 103354.png');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (80,'분양완료','강아지','암컷',1,'포메 분양할게요ㅠㅠ','순해요 이뻐요',to_date('23/10/31','RR/MM/DD'),0,'testt','cdf36e10-b7fb-48b4-90f6-ad67c820933e_스크린샷 2023-10-22 115502.png');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (66,'분양중','먼치킨','암컷',2,'먼치킨냥이','너무 이쁜데 ㅠㅜ데려가 키우실 분 있을까요',to_date('23/10/26','RR/MM/DD'),0,'testt','fca92f4b-b251-4b8e-bbd9-69ac9cf8ad5e_스크린샷 2023-11-01 103338.png');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (73,'분양완료','말티즈','암컷',2,'데려가실 분 있나요','ㅠㅠ애기에요',to_date('23/10/27','RR/MM/DD'),0,'testt','b0bb1e31-0374-40be-86a2-a9cc7f4af7dd_스크린샷 2023-10-22 130440 - 복사본.png');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (23,'분양중','고양이','수컷',3,'귀여운샴','활발한 아이에요',to_date('23/10/20','RR/MM/DD'),0,'test2','bbb.jpg');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (24,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test2','aaa.jpg');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (25,'분양중','고양이','수컷',3,'귀여운샴','활발한 아이에요',to_date('23/10/20','RR/MM/DD'),0,'test2','bbb.jpg');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (26,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test2','aaa.jpg');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (27,'분양중','고양이','수컷',3,'귀여운샴','활발한 아이에요',to_date('23/10/20','RR/MM/DD'),0,'test2','bbb.jpg');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (28,'분양중','강아지','암컷',2,'귀여운말티즈','순둥ㅇ이에요',to_date('23/10/20','RR/MM/DD'),0,'test2','aaa.jpg');
+Insert into MEDIPAW.BOONYANG (BYNO,STATE,KIND,GENDER,AGE,TITLE,CONTENT,REGDATE,REPLYCNT,ID,BYIMG) values (75,'분양중','강아지','암컷',2,'말티푸','귀여워요',to_date('23/10/27','RR/MM/DD'),0,'testt','47968f22-674a-4506-a129-5442ca59b692_스크린샷 2023-11-01 102001.png');
+
+Insert into MEDIPAW.BY_ATTACH (BYNO,UUID,UPFOLDER,FILENAME) values (81,'a103117b-b6e0-407b-ae8a-474aafb4f1d7','2023\11\01','스크린샷 2023-10-22 112723.png');
+Insert into MEDIPAW.BY_ATTACH (BYNO,UUID,UPFOLDER,FILENAME) values (75,'ab85b4e7-c22d-4e0d-8bd9-b56582994097','2023\11\01','스크린샷 2023-11-01 102001.png');
+Insert into MEDIPAW.BY_ATTACH (BYNO,UUID,UPFOLDER,FILENAME) values (46,'511e99f7-daed-4a40-b91e-0b4e502e215e','2023\11\01','스크린샷 2023-11-01 103945.png');
+
+Insert into MEDIPAW.BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (30,'저 데려가고싶어요ㅠ',to_date('23/11/01','RR/MM/DD'),46,'testt');
+Insert into MEDIPAW.BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (26,'어허',to_date('23/10/25','RR/MM/DD'),44,'admin11');
+Insert into MEDIPAW.BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (27,'귀엽죠',to_date('23/10/25','RR/MM/DD'),48,'testt');
+Insert into MEDIPAW.BY_REPLY (BYRNO,REPLY,REGDATE,BYNO,ID) values (29,'넘 귀엽',to_date('23/10/25','RR/MM/DD'),46,'testt');
+
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (16,to_date('23/10/26','RR/MM/DD'),3,'dd','dddddddddddddddddd',1,'testt',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (17,to_date('23/10/26','RR/MM/DD'),4,'gg','ggg',1,'testt',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (18,to_date('23/10/26','RR/MM/DD'),2,'d','ddddd',1,'testt',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (20,to_date('23/10/26','RR/MM/DD'),3,'ddd','dddssss',1,'testt',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (23,to_date('23/10/26','RR/MM/DD'),5,'야호','ㅇㅇㅇㅇㅇ',1,'testt',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (14,to_date('23/10/26','RR/MM/DD'),4,'aaaa','aaaaaaaaa',1,'testt',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (21,to_date('23/10/26','RR/MM/DD'),4,'aaa','aaass',1,'testt',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (22,to_date('23/10/26','RR/MM/DD'),2,'sss','sfffffffffff',1,'testt',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (13,to_date('23/10/25','RR/MM/DD'),3,'dd','dddaaaaa',1,'testt',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (10,to_date('23/10/25','RR/MM/DD'),2,'s','ssddd',1,'aaaaa',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (8,to_date('23/10/25','RR/MM/DD'),4,'ggg','dddddddd',1,'aaaaa',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (9,to_date('23/10/25','RR/MM/DD'),3,'aa','aaaaaa',1,'aaaaa',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (11,to_date('23/10/25','RR/MM/DD'),3,'hhh','hshsaa',1,'aaaaa',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (12,to_date('23/10/25','RR/MM/DD'),4,'h','sssssss',1,'aaaaa',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (24,to_date('23/10/31','RR/MM/DD'),4,'굿','좋아요',1,'testt',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (31,to_date('23/10/31','RR/MM/DD'),5,'조ㅗ아','ㅎㅎ',1,'testt',101);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (25,to_date('23/10/31','RR/MM/DD'),4,'오오','좋다',1,'aaaaa',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (26,to_date('23/10/31','RR/MM/DD'),4,'ddd','dsssssss',1,'aaaaa',100);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (33,to_date('23/10/31','RR/MM/DD'),5,'와아','친절',1,'testt',2);
+Insert into MEDIPAW.REVIEW (RNO,REGDATE,STAR,TITLE,CONTENT,ANIMALHOSP_NO,ID,TNO) values (32,to_date('23/10/31','RR/MM/DD'),4,'aaaaaaa','dddddd',1,'testt',104);
+
+Insert into MEDIPAW.STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('kimsss','$2a$10$Rpaz54TodR1fYJX66/0DGufJxQjiTqCP4rWjR.41PF8rRDbkMEYfK','김이라','01023451111','adg@gmail.com','2128173385',to_date('23/11/01','RR/MM/DD'),'1','7f97d155-7ce4-4101-9879-9c2f45ceda9e_스크린샷 2023-10-23 144111.png');
+Insert into MEDIPAW.STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('jimin12','$2a$10$ztRGbnrG61AqiJQdPrBbK.k9FU7K1otm758awrCNpJfuBODNz3qrW','김지민','01048632111','jj@daum.com','2128173385',to_date('23/10/18','RR/MM/DD'),'1','348f3273-a5b3-473b-b3c0-9f612ff96c32_스크린샷 2023-10-18 210959.png');
+Insert into MEDIPAW.STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('woori123','$2a$10$YUOC3b2aQtivfd9f0z.PFegyKeF1PvP47DUvXV7q2qmi.rcydDE8W','김우리','01085732111','woori@naver.com','2128173385',to_date('23/10/18','RR/MM/DD'),'1','d4455992-b7dd-41fe-ac55-da85f28f9497_스크린샷 2023-10-18 211005.png');
+Insert into MEDIPAW.STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('hong122','$2a$10$nikf4yHuqZQtvAT0.hZmq..1avMdbc1dtslKOviVT3nM4ttM1caZe','홍길동','01023432222','hhh@gmail.com','2128173385',to_date('23/10/18','RR/MM/DD'),'1','스크린샷 2023-10-12 141547.png');
+Insert into MEDIPAW.STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('ddd1111','$2a$10$NkSegnCtEggTglemXzC90upsFcncr6XhlZyWBaWzLGZwFizAK9D3G','김동휘','01023451111','gdfs@daum.com','2128173385',to_date('23/10/19','RR/MM/DD'),'1','24309b12-b79d-40e3-83d1-076e716eeff9_스크린샷 2023-10-18 211005.png');
+Insert into MEDIPAW.STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('kimnara','$2a$10$LPLcl7bUdpdLIagMiO2xDuHroP2E4QuaFLn8pAyHSqNYxh3m0UMMK','김나라','01023451111','asd@naver.com','2128173385',to_date('23/10/19','RR/MM/DD'),'1','903f9fd9-08be-46b5-ba20-9c76aeb4f59f_스크린샷 2023-10-18 210959.png');
+Insert into MEDIPAW.STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('asdfff','$2a$10$d8ic/2KCN5xBwFU/mBByI.SOwy9hO7UqXgCgFNGzm.B1nBaJJGW8y','변운섭','01035555333','asdff@gmail.com','2128173385',to_date('23/10/23','RR/MM/DD'),'1','b58a1a3d-6b79-42fe-8550-2c4a129d011a_스크린샷 2023-10-23 144111.png');
+Insert into MEDIPAW.STAFF (SID,SPW,SNAME,SPHONE,SEMAIL,COMPANYNUM,REGDATE,ENABLED,IMG) values ('kangddd','$2a$10$b6lHXDDWcuLC2Ss4XikBue.9ysvh3oKH2LtyTi8jg7CIqsZB2xENq','강동원','01023451111','ggds@naver.com','2128173385',to_date('23/11/01','RR/MM/DD'),'1','aaa9556f-bff8-4423-b394-a7a67157165a_스크린샷 2023-10-18 211010.png');
+
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('kimsss','ROLE_STAFF');
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('qwerrr','ROLE_STAFF');
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('ddd1111','ROLE_STAFF');
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('woori123','ROLE_STAFF');
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('hong122','ROLE_STAFF');
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('jimin12','ROLE_STAFF');
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('123123','ROLE_STAFF');
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('testttt','ROLE_STAFF');
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('asd2e4','ROLE_STAFF');
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('ddd1111','ROLE_STAFF');
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('image','ROLE_STAFF');
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('kimnara','ROLE_STAFF');
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('asdfff','ROLE_STAFF');
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('ddd1111','ROLE_STAFF');
+Insert into MEDIPAW.STAFF_AUTH (SID,AUTH) values ('kangddd','ROLE_STAFF');
+
+
