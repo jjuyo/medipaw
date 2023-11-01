@@ -63,8 +63,12 @@ public class LikesController {
     @GetMapping("/likes")
     @ResponseBody
     public List<String> getLikedPlaces(Principal principal) {
-        String id = principal.getName();
+        if (principal == null) {
+            // 로그인하지 않았을 경우
+            return Collections.emptyList();
+        }
 
+        String id = principal.getName();
         return likesService.getLikedPlaces(id);
     }
 }
