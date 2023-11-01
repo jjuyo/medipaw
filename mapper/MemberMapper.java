@@ -19,7 +19,7 @@ public interface MemberMapper {
 	
 	public int saveRole(AuthVO authVO);
 
-	@Select("SELECT COUNT(*) FROM member WHERE id = #{id}")
+	@Select("SELECT COUNT(*) FROM (SELECT id FROM member WHERE id = #{id} UNION SELECT sid FROM staff WHERE sid = #{id})")
 	public int findById(String id);
 	
     String findIdByFullNameAndPhone(@Param("name") String name, @Param("phone") String phone);
