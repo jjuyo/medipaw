@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.PetMapMapper">
+<resultMap type = "org.medipaw.domain.PetMapVO" id="PetMapMap">
+	<result property = "lcLa"	column="LC_LA"></result>
+	<result property = "lcLo"		column="LC_LO"></result>
+	<result property = "fcltyNm"		column="fclty_nm"></result>
+	<result property = "ctgryTwoNm"		column="ctgry_two_nm"></result>
+	<result property = "ctgryThreeNm"		column="ctgry_three_nm"></result>
+	<result property = "zipNo"		column="zip_no"></result>
+	<result property = "rdnmadrNm"		column="rdnmadr_nm"></result>
+	<result property = "lnmAddr"		column="lnm_addr"></result>
+	<result property = "telNo"		column="tel_no"></result>
+	<result property = "hmpgUrl"		column="hmpg_url"></result>
+	<result property = "rstdeGuidCn"		column="rstde_guid_cn"></result>
+	<result property = "operTime"		column="oper_time"></result>
+	<result property = "parkngPosblAt"		column="parkng_posbl_at"></result>
+	<result property = "utiliizaPrcCn"		column="utiliiza_prc_cn"></result>
+	<result property = "petLmttMtrCn"		column="pet_lmtt_mtr_cn"></result>
+	<result property = "placeNo"		column="place_no"></result>
+</resultMap>
+  <!-- 쿼리 보관 -->
+<!-- <select id="getPetMap" resultMap="PetMapMap">
+	SELECT LC_LA, LC_LO, fclty_nm, ctgry_two_nm, ctgry_three_nm,
+	       zip_no, rdnmadr_nm, lnm_addr, tel_no,
+	       hmpg_url, rstde_guid_cn, oper_time,
+	       parkng_posbl_at, utiliiza_prc_cn, pet_lmtt_mtr_cn
+	FROM petmap
+</select> -->
+<select id="getPetMap" resultMap="PetMapMap">
+	SELECT LC_LA, LC_LO FROM petmap
+</select>    		
+  
+  
+<select id="getPetMapInfo" resultMap="PetMapMap">
+    SELECT fclty_nm, ctgry_two_nm, ctgry_three_nm,
+           zip_no, rdnmadr_nm, lnm_addr, tel_no,
+           hmpg_url, rstde_guid_cn, oper_time,
+           parkng_posbl_at, utiliiza_prc_cn, pet_lmtt_mtr_cn, place_no
+    FROM petmap
+    WHERE LC_LA = #{lcLa} AND LC_LO = #{lcLo}
+  </select>
+</mapper>
+
+
+

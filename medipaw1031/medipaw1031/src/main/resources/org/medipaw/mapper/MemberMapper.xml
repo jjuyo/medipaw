@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.MemberMapper">
+<resultMap type = "org.medipaw.domain.MemberVO" id="memberMap">
+	<id		property="id"	column="id"></id> <!-- property는 vo랑 같게 column은 table이랑 같게 -->
+	<result property = "passwd"	column="passwd"></result>
+	<result property = "name"		column="name"></result>
+	<result property = "regDate"	column="regdate"></result>
+	<result property = "addr1"	column="addr1"></result>
+	<result property = "phone"	column="phone"></result>
+	<result property = "email"	column="email"></result>
+	<result property = "birth"	column="birth"></result>
+	
+	<collection property="authList"	resultMap="authMap"></collection>
+</resultMap>
+	
+<resultMap type = "org.medipaw.domain.AuthVO" id="authMap">
+	<result property="id"	column="id"></result>
+	<result property="auth"	column="auth"></result>
+</resultMap>
+ 
+ <sql id="criteria">
+  	 <trim prefix="(" suffix=") AND " prefixOverrides="OR">
+	 	<foreach item="type" collection="typeArr">
+	 	  <trim prefix="OR">
+	 		<choose>
+	 			<when test="type == 'I'.toString()">
+	 				id LIKE '%'||#{keyword}||'%'
+	 			</when>
+	 			<when test="type == 'N'.toString()">
+	 				name LIKE '%'||#{keyword}||'%'
+	 			</when>
+	 		</choose>
+	 	  </trim>
+	 	</foreach>
+	 </trim>
+  </sql> 
+ 
+<select id="selectAllPaging" resultType="org.medipaw.domain.MemberVO">
+    <![CDATA[ 
+        SELECT id, name
+        FROM (SELECT id, name, ROWNUM rn
+              FROM member
+              WHERE ]]>
+                    <include refid="criteria"></include>
+    <![CDATA[ rownum <= #{amount} * #{pageNum} )
+    	WHERE  rn > #{amount} * ( #{pageNum} - 1 ) 
+    ]]>
+</select>
+
+<select id="totalCount" resultType="int">
+    <![CDATA[ 
+        SELECT COUNT(*) 
+        FROM member
+        WHERE ]]>
+    <include refid="criteria"></include>
+    <![CDATA[ ID IS NOT NULL ]]> 
+</select>
+ 
+ 
+<select id ="select" resultMap="memberMap">
+Select m.id, passwd, name, enabled, auth 
+From member m
+Join member_auth a On m.id = a.id
+Where m.id = #{id}
+</select>
+
+<insert id="saveUser" parameterType="org.medipaw.domain.MemberVO">
+    insert into member( id, name, passwd, addr1, phone, email,
+    <if test="birth != null"> birth,</if> regdate, enabled) 
+    values( #{id}, #{name}, #{passwd}, #{addr1}, #{phone}, #{email},
+    <if test="birth != null">#{birth},</if> SYSDATE, 1)
+</insert>
+
+<insert id="saveRole" parameterType="org.medipaw.domain.AuthVO">
+    insert into member_auth(
+        id,
+        auth
+    ) values(
+        #{id},
+        #{auth}
+    )
+</insert>
+
+  <select id="findIdByFullNameAndPhone" resultType="string">
+      SELECT id FROM member WHERE name = #{name} AND phone = #{phone}
+  </select>
+  
+<select id="findByUsernameAndEmail" resultType="int">
+    SELECT COUNT(*)
+    FROM member  <!-- 여기에는 실제 테이블 이름을 입력해야 합니다. -->
+    WHERE id = #{id} AND email = #{email}
+</select>
+
+  <update id="updatePassword" >
+     UPDATE member SET passwd=#{newPassword} WHERE id=#{id}
+  </update>
+
+  <select id="findByUsername" resultType="org.medipaw.domain.MemberVO">
+      SELECT * FROM member WHERE id = #{userId} 
+      <!-- 'members'는 실제 테이블 이름으로 변경해야 합니다 -->
+  </select>
+
+  <update id="updateUser" parameterType="map">
+     UPDATE member SET 
+          name = #{name,jdbcType=VARCHAR},
+        phone = #{phone,jdbcType=VARCHAR},
+        email = #{email,jdbcType=VARCHAR},
+        addr1 = #{addr1,jdbcType=VARCHAR},
+        birth = #{birth,jdbcType=NULL}
+     WHERE id = #{id}
+  </update>
+  
+   <delete id="deleteMember">
+       DELETE FROM member WHERE id = #{id}
+   </delete>
+  
+  
+  </mapper>
+
+
+

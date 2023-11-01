@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.ConnectingBoardAttachMapper">
+  <select id="yesterdayFiles" 
+  	      resultType="org.medipaw.domain.ConnectingBoardAttachVO">
+    SELECT 	* 
+    FROM 	connecting_attach 
+    WHERE 	uploadPath = TO_CHAR(SYSDATE - 1, 'yyyy\MM\dd')
+  </select>
+  
+  <delete id="deleteAll">
+	DELETE connecting_attach WHERE cno = #{cno} 
+  </delete>
+  
+  <delete id="delete">
+	DELETE connecting_attach WHERE uuid = #{uuid}
+  </delete>
+  
+  <insert id="insert">
+	INSERT INTO connecting_attach
+	VALUES(#{uuid}, #{cno}, #{uploadPath}, #{fileName}, #{fileType})  
+  </insert>
+  
+  <select id="select" 
+  	      resultType="org.medipaw.domain.BraggingBoardAttachVO">
+    SELECT * FROM connecting_attach WHERE cno = #{cno}
+  </select>
+</mapper>

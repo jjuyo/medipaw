@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.SiljongMapper">
+<!-- 쿼리 보관 -->
+<sql id="criteria">
+	<!-- 제일 앞에 ( 붙이고 -->
+	<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+	    <foreach item="type" collection="typeArr">
+	    	<trim prefix="OR">	<!-- 타입이 여러개인 경우 or가 처음 제외하고 중간에 들어가야하기 때문에 trim 사용 -->
+		    	<choose>
+		    		<when test="type == 'T'.toString()">
+		    			sjtitle LIKE '%'||#{keyword}||'%'
+		    		</when>
+		    		<when test="type == 'C'.toString()">
+		    			sjcontent LIKE '%'||#{keyword}||'%'
+		    		</when>
+		    		<when test="type == 'I'.toString()">
+		    			id LIKE '%'||#{keyword}||'%'
+		    		</when>
+		    	</choose>
+	    	</trim>
+	    </foreach>
+    </trim>
+    <!-- 마지막에 ) 붙인 후 -->
+</sql>
+<sql id="myCriteria">
+	<!-- 제일 앞에 ( 붙이고 -->
+	<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+	    <foreach item="type" collection="cri.typeArr">
+	    	<trim prefix="OR">	<!-- 타입이 여러개인 경우 or가 처음 제외하고 중간에 들어가야하기 때문에 trim 사용 -->
+		    	<choose>
+		    		<when test="type == 'T'.toString()">
+		    			sjtitle LIKE '%'||#{cri.keyword}||'%'
+		    		</when>
+		    		<when test="type == 'C'.toString()">
+		    			sjcontent LIKE '%'||#{cri.keyword}||'%'
+		    		</when>
+		    		<when test="type == 'I'.toString()">
+		    			id LIKE '%'||#{cri.keyword}||'%'
+		    		</when>
+		    	</choose>
+	    	</trim>
+	    </foreach>
+    </trim>
+    <!-- 마지막에 ) 붙인 후 -->
+</sql>
+
+  <select id="select" resultType="org.medipaw.domain.SiljongVO">
+    SELECT * FROM SILJONG WHERE SJNO = #{sjno}
+  </select>
+  
+  <insert id="insert">	<!-- insert를 하기 전에 시퀀스 번호를 알아야 할 경우 -->
+    <selectKey keyProperty="sjno" order="BEFORE" resultType="int">
+    SELECT SILJONG_SEQ.NEXTVAL FROM dual
+  	</selectKey>
+  	
+  	<!-- 시퀀스 대신 위에서 셀렉트해 저장해 둔 sjno를 사용 -->
+    INSERT INTO SILJONG VALUES(#{sjno}, '실종', #{sjTitle}, #{sjContent}, #{id}, SYSDATE, 0, 0)
+  </insert>
+  
+  <delete id="delete">
+  	DELETE FROM SILJONG WHERE sjno = #{sjno}
+  </delete>
+  
+  <update id="update">
+  	UPDATE SILJONG SET sjstate = #{sjState}, sjtitle = #{sjTitle}, sjcontent = #{sjContent} WHERE sjno = #{sjno}
+  </update>
+  
+  <select id="selectAllPaging" resultType="org.medipaw.domain.SiljongVO">	
+  <!-- resultType 저렇게 놓으면 알아서 리스트나 vo를 갖고옴 -->
+  <![CDATA[
+    SELECT rn, sjno, sjstate, sjtitle, sjcontent, id, sjregDate, sjhit, sjreplyCnt 
+	FROM (SELECT /*+INDEX_DESC(SILJONG PK_SILJONG) */
+	rownum rn, sjno, sjstate, sjtitle, sjcontent, id, sjregDate, sjhit, sjreplyCnt FROM SILJONG 
+    WHERE ]]>
+   
+    <include refid="criteria"></include>
+    
+    <![CDATA[
+    rownum <= #{amount} * #{pageNum} )
+    WHERE rn > #{amount} * ( #{pageNum} - 1 )
+  	]]>
+  </select>
+  
+  <select id="selectMine" resultType="org.medipaw.domain.SiljongVO">	
+  <!-- resultType 저렇게 놓으면 알아서 리스트나 vo를 갖고옴 -->
+  <![CDATA[
+    SELECT rn, sjno, sjstate, sjtitle, sjcontent, id, sjregDate, sjhit, sjreplyCnt 
+	FROM (SELECT /*+INDEX_DESC(SILJONG PK_SILJONG) */
+	rownum rn, sjno, sjstate, sjtitle, sjcontent, id, sjregDate, sjhit, sjreplyCnt FROM SILJONG  
+    WHERE ]]>
+    <include refid="myCriteria"></include>
+    <![CDATA[
+    id = #{id} AND rownum <= #{cri.amount} * #{cri.pageNum} )
+    WHERE rn > #{cri.amount} * ( #{cri.pageNum} - 1 )
+  	]]>
+  </select>
+  
+  <select id="totalCount" resultType="int">
+  	SELECT COUNT(*) FROM SILJONG WHERE
+	<!-- 보관해 둔 쿼리 사용 -->
+    <include refid="criteria"></include>	
+    <![CDATA[ sjno > 0 ]]>
+  </select>
+  
+  <select id="totalCountMine" resultType="int">
+  	SELECT COUNT(*) FROM SILJONG WHERE
+    <include refid="myCriteria"></include>	
+    id = #{id}
+  </select>
+  
+  <!-- 댓글 수 업데이트 -->
+  <update id="updateReplyCnt">
+  <![CDATA[
+  	UPDATE SILJONG SET sjreplycnt = sjreplyCnt + #{incdec} WHERE sjno = #{sjno}
+	]]>
+  </update>
+  
+    <!-- 조회 수 업데이트 -->
+  <update id="updateHit">
+  <![CDATA[
+  	UPDATE SILJONG SET sjhit = sjhit + 1 WHERE sjno = #{sjno}
+	]]>
+  </update>
+  
+</mapper>
+

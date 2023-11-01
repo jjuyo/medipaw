@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.BraggingBoardMapper">
+  <!-- 쿼리 보관 -->
+  <sql id="braggingCriteria">
+  	 <trim prefix="(" suffix=") AND " prefixOverrides="OR">
+	 	<foreach item="type" collection="typeArr">
+	 	  <trim prefix="OR">
+	 		<choose>
+	 			<when test="type == 'T'.toString()">
+	 				title LIKE '%'||#{keyword}||'%'
+	 			</when>
+	 			<when test="type == 'C'.toString()">
+	 				content LIKE '%'||#{keyword}||'%'
+	 			</when>
+	 			<when test="type == 'W'.toString()">
+	 				id LIKE '%'||#{keyword}||'%'
+	 			</when>
+	 		</choose>
+	 	  </trim>
+	 	</foreach>
+	 </trim>
+  </sql>
+  
+  <!-- 쿼리 보관 -->
+  <sql id="myBraggingCriteria">
+  	 <trim prefix="(" suffix=") AND " prefixOverrides="OR">
+	 	<foreach item="type" collection="bcri.typeArr">
+	 	  <trim prefix="OR">
+	 		<choose>
+	 			<when test="type == 'T'.toString()">
+	 				title LIKE '%'||#{bcri.keyword}||'%'
+	 			</when>
+	 			<when test="type == 'C'.toString()">
+	 				content LIKE '%'||#{bcri.keyword}||'%'
+	 			</when>
+	 		</choose>
+	 	  </trim>
+	 	</foreach>
+	 </trim>
+  </sql>
+  
+    			 
+  <select id="selectAllPaging" resultType="org.medipaw.domain.BraggingBoardVO">
+  	<![CDATA[ 
+    	SELECT bno, title, id, regDate, update_Date, hit,recommendCnt
+    	FROM   ( SELECT /*+INDEX_DESC(bragging_board pk_board) */
+    					rownum rn, bno, title, id, 
+    					regDate, update_Date, hit,recommendCnt
+    			 FROM   bragging_board
+    			 WHERE  ]]>
+    			 	    <!-- 보관해 둔 쿼리 사용 -->
+    			 	    <include refid="braggingCriteria"></include>
+    <![CDATA[ 	 		rownum <= #{amount} * #{pageNum} )
+    	WHERE  rn > #{amount} * ( #{pageNum} - 1 )   	
+    ]]> ORDER BY bno DESC
+  </select>
+  
+
+  
+   <select id="mySelectAllPaging" resultType="org.medipaw.domain.BraggingBoardVO">
+  	<![CDATA[ 
+    	SELECT bno, title, id, regDate, update_Date, hit,recommendCnt
+    	FROM   ( SELECT /*+INDEX_DESC(bragging_board pk_board) */
+    					rownum rn, bno, title, id, 
+    					regDate, update_Date, hit,recommendCnt
+    			 FROM   bragging_board
+    			 WHERE  ]]>
+    			 	    <!-- 보관해 둔 쿼리 사용 -->
+    			 	    <include refid="myBraggingCriteria"></include>
+    <![CDATA[ 	 		id = #{id} AND rownum <= #{bcri.amount} * #{bcri.pageNum} )
+    	WHERE  rn > #{bcri.amount} * ( #{bcri.pageNum} - 1 )   	
+    ]]> ORDER BY bno DESC
+  </select>
+  
+  <select id="myTotalCount" resultType="int">
+  	<![CDATA[ 
+	  	SELECT 	COUNT(*) 
+	  	FROM 	bragging_board
+	    WHERE	]]>
+	     		<!-- 보관해 둔 쿼리 사용 -->
+	    		<include refid="myBraggingCriteria"></include>
+	 			id = #{id}
+		
+  </select>
+  
+  <select id="totalCount" resultType="int">
+  	<![CDATA[ 
+	  	SELECT 	COUNT(*) 
+	  	FROM 	bragging_board
+	    WHERE	]]>
+	     		<!-- 보관해 둔 쿼리 사용 -->
+	    		<include refid="braggingCriteria"></include>
+	<![CDATA[ 	bno > 0	]]>
+		
+  </select>
+  
+  <update id="update">
+	UPDATE 	bragging_board
+	SET		title = #{title},   content = #{content}, update_Date = SYSDATE
+	WHERE	bno = #{bno}  
+  </update>
+  
+  <delete id="delete">
+	DELETE bragging_board WHERE bno = #{bno}
+  </delete>
+  
+  <insert id="insertSelectKey">
+  	<!-- PK 값을 미리 처리해서 bno에 저장 -->
+	<selectKey keyProperty="bno" order="BEFORE" resultType="int">
+	    SELECT BRAGGING_BOARD_SEQ.NEXTVAL FROM dual 
+	</selectKey>
+  	
+  	<!-- 시퀀스 대신 저장해 둔 bno를 사용 -->
+	INSERT INTO bragging_board(bno, id, title, content)
+	VALUES(#{bno}, #{id}, #{title}, #{content})  
+  </insert>
+  
+  <insert id="insert">
+	INSERT INTO bragging_board(bno, id,title, content)
+	VALUES(BRAGGING_BOARD_SEQ.NEXTVAL,#{id}, #{title}, 
+	       #{content})  
+  </insert>
+
+  
+   <insert id="insertRecommend" parameterType="org.medipaw.domain.BraggingBoardVO">
+    INSERT INTO bragging_recommend (rno, bno, id)
+    VALUES (BRAGGING_RECOMMEND_SEQ.NEXTVAL, #{bbvo.bno}, #{bbvo.id})
+	</insert>
+
+	<!-- countRecommend 메서드 -->
+	<select id="countRecommend" resultType="int">
+	    SELECT COUNT(*)
+	    FROM bragging_recommend
+	    WHERE bno = #{bno} AND id = #{id}
+	</select>
+  
+  <update id="increaseRecommendCount">
+    UPDATE bragging_board 
+    SET recommendCnt = recommendCnt + 1
+    WHERE bno = #{bno}
+	</update>
+  
+  <select id="select" 
+  	      resultType="org.medipaw.domain.BraggingBoardVO">
+    SELECT * FROM bragging_board WHERE bno = #{bno}
+  </select>
+  
+    <select id="selectAll" 
+  	      resultType="org.medipaw.domain.BraggingBoardVO">
+  	<![CDATA[ 
+    	SELECT * FROM tbl_board WHERE bno > 0
+    ]]>
+  </select>
+  
+  <update id="increaseHit" parameterType="int">
+  
+ 	 UPDATE bragging_board SET hit = hit + 1 WHERE bno = #{bno}
+ </update>
+  
+</mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.ReplyMapper">
+	<select id="selectAllPaging" resultType="org.medipaw.domain.ReplyVO">
+  <![CDATA[ 
+    SELECT byrno, byno, reply, id, regDate
+    FROM ( SELECT /*+INDEX (by_reply pk_by_reply) */
+             rownum rn, byrno, byno, reply, id, regDate
+      		FROM  by_reply
+        	WHERE byno = #{byno} AND rownum <= #{cri.amount} * #{cri.pageNum}) 
+      		
+      WHERE rn > #{cri.amount} * (#{cri.pageNum} - 1)
+  ]]>
+</select>
+
+<select id="selectReply" resultType="int">
+		SELECT COUNT(*) FROM by_reply WHERE byno=#{byno}
+</select>
+
+
+	<insert id="insert">
+		INSERT INTO by_reply (byrno, reply, byno, id)
+		VALUES(byrno_seq.NEXTVAL, #{reply}, #{byno}, #{id})
+	</insert>
+	<select id="select" resultType="org.medipaw.domain.ReplyVO">
+		SELECT * FROM by_reply WHERE
+		byrno= #{byrno}
+	</select>
+	<delete id="delete">
+		DELETE FROM by_reply WHERE byrno = #{byrno}
+	</delete>
+	
+	<update id="update">
+		UPDATE by_reply SET reply=#{reply}
+		WHERE byrno = #{byrno}
+	</update>
+</mapper>

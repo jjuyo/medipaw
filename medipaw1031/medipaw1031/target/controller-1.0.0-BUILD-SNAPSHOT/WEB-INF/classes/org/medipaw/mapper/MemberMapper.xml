@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.MemberMapper">
+<resultMap type = "org.medipaw.domain.MemberVO" id="memberMap">
+	<id		property="id"	column="id"></id> <!-- property는 vo랑 같게 column은 table이랑 같게 -->
+	<result property = "pw"	column="pw"></result>
+	<result property = "name"		column="name"></result>
+	<result property = "regDate"	column="regDate"></result>
+	<result property = "updateDate"	column="updateDate"></result>
+	<collection property="authList"	resultMap="authMap"></collection>
+</resultMap>
+	
+<resultMap type = "org.medipaw.domain.AuthVO" id="authMap">
+	<result property="id"	column="id"></result>
+	<result property="auth"	column="auth"></result>
+</resultMap>
+ 
+<select id ="select" resultMap="memberMap">
+Select m.id, pw, name, enabled, regDate, updateDate,
+auth 
+From tbl_member m
+Join tbl_member_auth a On m.id = a.id
+Where m.id = #{id}
+</select>
+</mapper>
+
+
+
