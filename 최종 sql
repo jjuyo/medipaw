@@ -110,8 +110,7 @@ FOR EACH ROW
 BEGIN
     INSERT INTO staff_auth (sid, auth) VALUES (:NEW.sid, 'ROLE_STAFF');
 END;
-/
-ALTER TRIGGER "MEDIPAW"."ADD_STAFF_AUTH" ENABLE;
+
 --------------------------------------------------------
 --  DDL for Trigger REMOVE_STAFF_AUTH
 --------------------------------------------------------
@@ -122,8 +121,7 @@ FOR EACH ROW
 BEGIN
     DELETE FROM staff_auth WHERE sid = :OLD.sid;
 END;
-/
-ALTER TRIGGER "MEDIPAW"."REMOVE_STAFF_AUTH" ENABLE;
+
 --------------------------------------------------------
 --  DDL for Trigger TRIGGER_REVIEW
 --------------------------------------------------------
@@ -136,8 +134,7 @@ BEGIN
     UPDATE animalhosp_main SET rv_cnt = rv_cnt + 1 WHERE animalhosp_no = :NEW.animalhosp_no;
     UPDATE animalhosp_main SET star_total = star_total + :NEW.star WHERE animalhosp_no = :NEW.animalhosp_no;
 END;
-/
-ALTER TRIGGER "MEDIPAW"."TRIGGER_REVIEW" ENABLE;
+
 --------------------------------------------------------
 --  DDL for Trigger TRIGGER_REVIEW_DELETE
 --------------------------------------------------------
@@ -195,30 +192,6 @@ FOR EACH ROW
 BEGIN
     UPDATE animalhosp_main SET rv_cnt = rv_cnt - 1, star_total = star_total - :OLD.star WHERE animalhosp_no = :OLD.animalhosp_no;
 END;
-
-
---------------------------------------------------------
---  DDL for Trigger ADD_STAFF_AUTH
---------------------------------------------------------
-
-  CREATE OR REPLACE TRIGGER "MEDIPAW"."ADD_STAFF_AUTH" 
-AFTER INSERT ON staff
-FOR EACH ROW
-BEGIN
-    INSERT INTO staff_auth (sid, auth) VALUES (:NEW.sid, 'ROLE_STAFF');
-END;
-
---------------------------------------------------------
---  DDL for Trigger REMOVE_STAFF_AUTH
---------------------------------------------------------
-
-  CREATE OR REPLACE TRIGGER "MEDIPAW"."REMOVE_STAFF_AUTH" 
-AFTER DELETE ON staff
-FOR EACH ROW
-BEGIN
-    DELETE FROM staff_auth WHERE sid = :OLD.sid;
-END;
-
 
 --------------------------------------------------------
 --  Constraints for Table BOONYANG
