@@ -158,40 +158,7 @@ BEGIN
     UPDATE animalhosp_main SET star_total = star_total - :OLD.star + :NEW.star WHERE animalhosp_no = :OLD.animalhosp_no;
 END;
 
---------------------------------------------------------
---  DDL for Trigger TRIGGER_REVIEW
---------------------------------------------------------
 
-  CREATE OR REPLACE TRIGGER "MEDIPAW"."TRIGGER_REVIEW" 
-AFTER INSERT
-ON review
-FOR EACH ROW
-BEGIN
-    UPDATE animalhosp_main SET rv_cnt = rv_cnt + 1 WHERE animalhosp_no = :NEW.animalhosp_no;
-    UPDATE animalhosp_main SET star_total = star_total + :NEW.star WHERE animalhosp_no = :NEW.animalhosp_no;
-END;
-
---------------------------------------------------------
---  DDL for Trigger TRIGGER_REVIEW_UPDATE
---------------------------------------------------------
-
-  CREATE OR REPLACE TRIGGER "MEDIPAW"."TRIGGER_REVIEW_UPDATE" 
-AFTER UPDATE ON review
-FOR EACH ROW
-BEGIN
-    UPDATE animalhosp_main SET star_total = star_total - :OLD.star + :NEW.star WHERE animalhosp_no = :OLD.animalhosp_no;
-END;
-
---------------------------------------------------------
---  DDL for Trigger TRIGGER_REVIEW_DELETE
---------------------------------------------------------
-
-  CREATE OR REPLACE TRIGGER "MEDIPAW"."TRIGGER_REVIEW_DELETE" 
-AFTER DELETE ON review
-FOR EACH ROW
-BEGIN
-    UPDATE animalhosp_main SET rv_cnt = rv_cnt - 1, star_total = star_total - :OLD.star WHERE animalhosp_no = :OLD.animalhosp_no;
-END;
 
 --------------------------------------------------------
 --  Constraints for Table BOONYANG
