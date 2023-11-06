@@ -1,0 +1,8 @@
+----1 sys에서 사용자 만들고 권한주기----
+CREATE USER medipaw IDENTIFIED BY 1111; 
+GRANT RESOURCE, CREATE SESSION TO medipaw;
+GRANT CREATE VIEW TO medipaw;
+GRANT CREATE TRIGGER TO medipaw;
+
+--- medipaw에서 테이블/뷰/트리거 생성 ---
+
