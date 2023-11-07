@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.MarkMapper">
+   <resultMap type="org.medipaw.domain.MarkVO" id="markMap">      <!-- TreatVO를 담는 resultMap -->
+      <id property="mno" column="mno"/>                        <!-- PRIMARY KEY -->
+      <result property="animalhosp_no" column="animalhosp_no"/>
+      <result property="id" column="id"/>
+      <collection property="hvo" resultMap="animalHospMap"/>   <!-- VO에 들어있는 변수 이름으로 -->
+   </resultMap>
+   
+   <resultMap type="org.medipaw.domain.AnimalHospVO" id="animalHospMap">   <!-- ReservVO를 담는 resultMap -->
+      <result property="animalhosp_no" column="animalhosp_no"/>         <!-- 조인하는 값이라 PRIMARY KEY는 아님 -->
+      <result property="animalhosp_name" column="animalhosp_name"/>
+      <result property="hsop_roadname_address" column="hsop_roadname_address"/>
+      <result property="hsop_phonenum" column="hsop_phonenum"/>
+      <result property="animalhosp_pic" column="animalhosp_pic"/>
+      <result property="star_total" column="star_total"/>
+      <result property="rv_cnt" column="rv_cnt"/>
+   </resultMap>
+   
+  <select id="selectMno" resultMap="markMap">   
+  <![CDATA[
+    SELECT mno, id, animalhosp_no, animalhosp_name, hsop_roadname_address, animalhosp_pic, hsop_phonenum, star_total, rv_cnt
+   FROM (
+       SELECT M.MNO AS mno,
+              M.ID AS id,
+              A.ANIMALHOSP_NO AS animalhosp_no,
+              A.ANIMALHOSP_NAME AS animalhosp_name,
+              A.HSOP_ROADNAME_ADDRESS AS hsop_roadname_address,
+              A.ANIMALHOSP_PIC AS animalhosp_pic,
+              A.HSOP_PHONENUM AS hsop_phonenum,
+              A.STAR_TOTAL AS star_total,
+              A.RV_CNT AS rv_cnt,
+              ROWNUM AS rn
+       FROM ANIMALHOSP_MAIN A
+       INNER JOIN MARK M ON A.ANIMALHOSP_NO = M.ANIMALHOSP_NO
+       WHERE id = #{id}
+       ORDER BY M.MNO DESC
+   )
+   WHERE rn <= #{cri.amount} * #{cri.pageNum}
+   AND rn > #{cri.amount} * (#{cri.pageNum} - 1)
+     ]]>
+  </select>   
+   
+  <select id="selectHos" resultMap="markMap">   
+  <![CDATA[
+    SELECT /*+ INDEX(A ANIMALHOSP_NAME_INDEX) */
+       mno, id, animalhosp_no, animalhosp_name, hsop_roadname_address, animalhosp_pic, hsop_phonenum, star_total, rv_cnt
+   FROM (
+       SELECT M.MNO AS mno,
+              M.ID AS id,
+              A.ANIMALHOSP_NO AS animalhosp_no,
+              A.ANIMALHOSP_NAME AS animalhosp_name,
+              A.HSOP_ROADNAME_ADDRESS AS hsop_roadname_address,
+              A.ANIMALHOSP_PIC AS animalhosp_pic,
+              A.HSOP_PHONENUM AS hsop_phonenum,
+              A.STAR_TOTAL AS star_total,
+              A.RV_CNT AS rv_cnt,
+              ROWNUM AS rn
+       FROM ANIMALHOSP_MAIN A
+       INNER JOIN MARK M ON A.ANIMALHOSP_NO = M.ANIMALHOSP_NO
+       WHERE id = #{id}
+       ORDER BY A.ANIMALHOSP_NAME ASC
+   )
+   WHERE rn <= #{cri.amount} * #{cri.pageNum}
+   AND rn > #{cri.amount} * (#{cri.pageNum} - 1)
+     ]]>
+  </select>
+  
+  <select id="select" resultType="int">   
+  <![CDATA[
+		SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+		FROM MARK
+		WHERE animalhosp_no = #{animalhosp_no} AND id = #{id}
+     ]]>
+  </select>
+  
+  <insert id="insert">   <!-- #{}안에 들어가는 애들은 VO랑 이름이 꼭 맞아야됨 -->
+   INSERT INTO MARK VALUES(MARK_SEQ.NEXTVAL, #{id}, #{animalhosp_no})
+  </insert>
+  
+  <delete id="delete">
+     DELETE FROM MARK WHERE animalhosp_no = #{animalhosp_no} AND id = #{id}
+  </delete>
+  
+  <select id="totalCount" resultType="int">
+     SELECT COUNT(*) FROM MARK WHERE id = #{id}
+  </select>
+</mapper>
