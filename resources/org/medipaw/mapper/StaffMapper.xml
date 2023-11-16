@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.StaffMapper">
+<resultMap type="org.medipaw.domain.StaffVO" id="staffMap">
+	<id property="sid" column="sid"/>
+	<result property="spw" column="spw"/>
+	<result property="sname" column="sname"/>
+	<result property="sphone" column="sphone"/>
+	<result property="semail" column="semail"/>
+	<result property="companyNum" column="companyNum"/>
+	<result property="regDate" column="regDate"/>
+	<result property="enabled" column="enabled"/>
+	<result property="img" column="img"/>
+	<collection property="authList" resultMap="authMap"/>
+	</resultMap>
+	<resultMap type="org.medipaw.domain.StaffAuthVO" id="authMap">
+	<result property="sid" column="sid"/>
+	<result property="auth" column="auth"/>
+	</resultMap>
+	<!-- 시큐리티 로그인 -->
+	<select id="login" resultMap="staffMap">
+	SELECT staff.sid, spw, sname, semail, sphone, regdate,  img, companynum, enabled, auth 
+	FROM staff
+	JOIN staff_auth ON staff.sid = staff_auth.sid
+	WHERE staff.sid= #{sid}
+	</select>
+   <!-- 병원관계자 가입 -->
+<insert id="insert">
+    INSERT INTO staff (sid, spw, sname, sphone, semail, companyNum, regDate, enabled, img)
+    VALUES (#{sid}, #{spw}, #{sname}, #{sphone}, #{semail}, #{companyNum}, SYSDATE, 1, #{img})
+</insert>
+<!-- 아이디 찾기 -->
+  <select id="findId" resultType="string">
+  SELECT sid FROM staff WHERE sname=#{sname} and sphone=#{sphone}
+  </select>
+  <!-- 비밀번호 찾기 -->
+  <select id="findPw" resultType="int">
+  SELECT count(*) FROM staff WHERE sname=#{sname} and sid=#{sid} and sphone=#{sphone}
+  </select>
+  
+	<!-- 아이디 중복확인 -->
+ <select id="idCheck" resultType="int">
+ SELECT count(*) FROM
+    (SELECT sid FROM staff WHERE sid = #{sid} UNION SELECT id FROM member WHERE id = #{sid})
+</select>
+<!-- 병원관계자 계정 정보보기  -->
+<select id="select" resultMap="staffMap">
+		SELECT * FROM staff WHERE sid = #{sid}
+	</select>
+		<!-- 쿼리보관 -->
+	<sql id="criteria">
+		<trim prefix="(" suffix=")  AND " prefixOverrides="OR">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'N'.toString()"> sname LIKE '%'||#{keyword}||'%' </when>
+						<when test="type == 'I'.toString()"> sid LIKE '%'||#{keyword}||'%'  </when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+<!-- 병원관계자 목록 -->
+<select id="selectAllPaging" resultType="org.medipaw.domain.StaffVO">
+  <![CDATA[
+    SELECT * FROM  ( SELECT /*+ INDEX(staff idx_name_id) */ 
+                   rownum rn, sid, sname, sphone, semail, companyNum,
+                   regDate, img
+              FROM   staff
+              WHERE     ]]>
+		<!-- 보관해둔 쿼리 사용 -->
+	<include refid="criteria"></include>
+	
+    <![CDATA[           
+               rownum <= #{amount} * #{pageNum} )
+       WHERE  rn > #{amount} * ( #{pageNum} - 1 )       
+    ]]>
+	</select>
+	<!-- 페이징 -->
+	<select id="totalCount" resultType="int">
+		SELECT COUNT(*) FROM
+		staff WHERE 
+		<!-- 보관해둔 쿼리 사용 -->
+		<include refid="criteria"></include>
+		sid is not null
+	</select>
+	<update id="update">
+		UPDATE staff SET semail=#{semail},
+		sphone =#{sphone}, img=#{img}
+		WHERE sid =
+		#{sid}
+	</update>
+	
+	<!-- 비밀번호 변경  -->
+		<update id="updatePw">
+		UPDATE staff SET spw = #{spw}
+		WHERE sid =#{sid}
+	</update>
+	<delete id="delete">
+		DELETE FROM staff WHERE sid = #{sid}
+	</delete>
+	
+</mapper>

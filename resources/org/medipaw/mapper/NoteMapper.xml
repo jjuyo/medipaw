@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.NoteMapper">
+  <!-- 쿼리 보관 -->
+  <sql id="criteria">
+    <trim prefix="(" suffix=") AND " prefixOverrides="OR">
+      <foreach item="type" collection="cri.typeArr">
+        <trim prefix="OR">
+          <choose>
+            <when test="type == 'T'.toString()">
+              note_title LIKE '%'||#{cri.keyword}||'%'
+            </when>
+            <when test="type == 'C'.toString()">
+              note_content LIKE '%'||#{cri.keyword}||'%'
+            </when>
+          </choose>
+        </trim>
+      </foreach>
+    </trim>
+  </sql>			
+   
+<select id="selectAllPaging" resultType="org.medipaw.domain.NoteVO">
+  <![CDATA[ 
+  SELECT NOTE_NO, NOTE_SENDER_STATUS, NOTE_RECIPIENT_STATUS, NOTE_RECIPIENT, NOTE_SENDER, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE
+  FROM   ( SELECT /*+INDEX_DESC(NOTE_MAIN pk_note_main) */
+                  rownum rn, NOTE_NO, NOTE_SENDER_STATUS, NOTE_RECIPIENT_STATUS, NOTE_RECIPIENT, NOTE_SENDER, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE
+          FROM   NOTE_MAIN
+          WHERE  NOTE_RECIPIENT = #{id}
+          ]]>
+              <!-- 보관해 둔 쿼리 사용 -->
+              <include refid="criteria"></include>
+  <![CDATA[  rownum <= #{cri.amount} * #{cri.pageNum} )
+  WHERE  rn > #{cri.amount} * ( #{cri.pageNum} - 1 )    
+  ]]>
+</select>
+ 
+<select id="selectRecp" resultType="org.medipaw.domain.NoteVO">
+  <![CDATA[ 
+  SELECT NOTE_NO, NOTE_SENDER_STATUS, NOTE_RECIPIENT_STATUS, NOTE_RECIPIENT, NOTE_SENDER, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE
+  FROM   ( SELECT /*+INDEX_DESC(NOTE_MAIN pk_note_main) */
+                  rownum rn, NOTE_NO, NOTE_SENDER_STATUS, NOTE_RECIPIENT_STATUS, NOTE_RECIPIENT, NOTE_SENDER, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE
+          FROM   NOTE_MAIN
+          WHERE  NOTE_RECIPIENT = #{id} AND (NOTE_RECIPIENT_STATUS = 0 OR NOTE_RECIPIENT_STATUS = 1) AND 
+          ]]>
+              <!-- 보관해 둔 쿼리 사용 -->
+              <include refid="criteria"></include>
+  <![CDATA[  rownum <= #{cri.amount} * #{cri.pageNum} )
+  WHERE  rn > #{cri.amount} * ( #{cri.pageNum} - 1 )    
+  ]]>
+</select>
+
+<select id="selectSend" resultType="org.medipaw.domain.NoteVO">
+  <![CDATA[ 
+  SELECT NOTE_NO, NOTE_SENDER_STATUS, NOTE_RECIPIENT_STATUS, NOTE_RECIPIENT, NOTE_SENDER, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE
+  FROM   ( SELECT /*+INDEX_DESC(NOTE_MAIN pk_note_main) */
+                  rownum rn, NOTE_NO, NOTE_SENDER_STATUS, NOTE_RECIPIENT_STATUS, NOTE_RECIPIENT, NOTE_SENDER, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE
+          FROM   NOTE_MAIN
+          WHERE  NOTE_SENDER = #{id} AND (NOTE_SENDER_STATUS = 0 OR NOTE_SENDER_STATUS = 1) AND
+          ]]>
+              <!-- 보관해 둔 쿼리 사용 -->
+              <include refid="criteria"></include>
+  <![CDATA[  rownum <= #{cri.amount} * #{cri.pageNum} )
+  WHERE  rn > #{cri.amount} * ( #{cri.pageNum} - 1 )    
+  ]]>
+</select>
+
+<select id="selectSave" resultType="org.medipaw.domain.NoteVO">
+  <![CDATA[ 
+  SELECT NOTE_NO, NOTE_SENDER_STATUS, NOTE_RECIPIENT_STATUS, NOTE_RECIPIENT, NOTE_SENDER, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE
+  FROM   ( SELECT /*+INDEX_DESC(NOTE_MAIN pk_note_main) */
+                  rownum rn, NOTE_NO, NOTE_SENDER_STATUS, NOTE_RECIPIENT_STATUS, NOTE_RECIPIENT, NOTE_SENDER, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE
+          FROM   NOTE_MAIN
+          WHERE  (NOTE_SENDER = #{id} AND NOTE_SENDER_STATUS = 2)
+            OR  (NOTE_RECIPIENT = #{id} AND NOTE_RECIPIENT_STATUS = 2) AND
+  ]]>
+              <!-- 보관해 둔 쿼리 사용 -->
+              <include refid="criteria"></include>
+  <![CDATA[  rownum <= #{cri.amount} * #{cri.pageNum} )
+  WHERE  rn > #{cri.amount} * ( #{cri.pageNum} - 1 )    
+  ]]>
+</select>
+
+  <select id="totalCount1" resultType="int">
+     SELECT COUNT(*) FROM NOTE_MAIN WHERE NOTE_RECIPIENT = #{id} AND (NOTE_RECIPIENT_STATUS = 0 OR NOTE_RECIPIENT_STATUS = 1)
+  </select>
+  
+    <select id="totalCount2" resultType="int">
+     SELECT COUNT(*) FROM NOTE_MAIN WHERE NOTE_SENDER = #{id} AND (NOTE_SENDER_STATUS = 0 OR NOTE_SENDER_STATUS = 1)
+  </select>
+  
+<select id="totalCount3" resultType="int">
+  SELECT COUNT(*)
+  FROM NOTE_MAIN
+  WHERE (NOTE_RECIPIENT = #{id} OR NOTE_SENDER = #{id})
+    AND NOTE_RECIPIENT_STATUS = 2
+    AND NOTE_SENDER_STATUS = 2
+</select>
+  
+  <delete id="delete">
+    DELETE NOTE_MAIN WHERE NOTE_NO = #{note_no}
+  </delete>
+  
+  <insert id="insertSelectKey">
+    <!-- PK 값을 미리 처리해서 NOTE_NO에 저장 -->
+    <selectKey keyProperty="note_no" order="BEFORE" resultType="int">
+      SELECT NOTE_SEQ.NEXTVAL FROM dual 
+    </selectKey>
+    
+    <!-- 시퀀스 대신 저장해 둔 NOTE_NO를 사용 -->
+    INSERT INTO NOTE_MAIN(NOTE_NO, NOTE_SENDER_STATUS, NOTE_RECIPIENT_STATUS, NOTE_RECIPIENT, NOTE_SENDER, NOTE_TITLE, NOTE_CONTENT)
+    VALUES(#{note_no}, #{note_recipient_status}, #{note_sender_status}, #{note_recipient}, #{note_sender}, #{note_title}, #{note_content})  
+  </insert>
+  
+  <insert id="insert">
+    INSERT INTO NOTE_MAIN(NOTE_NO, NOTE_SENDER_STATUS, NOTE_RECIPIENT_STATUS, NOTE_RECIPIENT, NOTE_SENDER, NOTE_TITLE, NOTE_CONTENT,NOTE_DATE)
+    VALUES(NOTE_SEQ.NEXTVAL, 1, 0, #{note_recipient}, #{note_sender}, #{note_title}, #{note_content}, SYSDATE) 
+  </insert>
+  
+  
+<update id="updateSave" parameterType="org.medipaw.domain.NoteVO">
+    UPDATE NOTE_MAIN
+    SET NOTE_SENDER_STATUS = CASE WHEN NOTE_SENDER = #{id} THEN 2 ELSE NOTE_SENDER_STATUS END,
+        NOTE_RECIPIENT_STATUS = CASE WHEN NOTE_RECIPIENT = #{id} THEN 2 ELSE NOTE_RECIPIENT_STATUS END
+    WHERE NOTE_NO = #{note_no}
+</update>
+
+<update id="unSave" parameterType="org.medipaw.domain.NoteVO">
+    UPDATE NOTE_MAIN
+    SET NOTE_SENDER_STATUS = CASE WHEN NOTE_SENDER = #{id} THEN 1 ELSE NOTE_SENDER_STATUS END,
+        NOTE_RECIPIENT_STATUS = CASE WHEN NOTE_RECIPIENT = #{id} THEN 1 ELSE NOTE_RECIPIENT_STATUS END
+    WHERE NOTE_NO = #{note_no}
+</update>
+
+<update id="noteDelete" parameterType="org.medipaw.domain.NoteVO">
+    UPDATE NOTE_MAIN
+    SET NOTE_SENDER_STATUS = CASE WHEN NOTE_SENDER = #{id} THEN 3 ELSE NOTE_SENDER_STATUS END,
+        NOTE_RECIPIENT_STATUS = CASE WHEN NOTE_RECIPIENT = #{id} THEN 3 ELSE NOTE_RECIPIENT_STATUS END
+    WHERE NOTE_NO = #{note_no}
+</update>
+
+<update id="noteCheck" parameterType="org.medipaw.domain.NoteVO">
+    UPDATE NOTE_MAIN
+    SET NOTE_SENDER_STATUS = CASE WHEN NOTE_SENDER = #{id} THEN 1 ELSE NOTE_SENDER_STATUS END,
+        NOTE_RECIPIENT_STATUS = CASE WHEN NOTE_RECIPIENT = #{id} THEN 1 ELSE NOTE_RECIPIENT_STATUS END
+    WHERE NOTE_NO = #{note_no}
+</update>  
+
+<select id="getNewNotes"  resultType="org.medipaw.domain.NoteVO">
+  	SELECT NOTE_NO, NOTE_SENDER, NOTE_TITLE
+	FROM NOTE_MAIN
+	WHERE NOTE_RECIPIENT = #{id} AND NOTE_RECIPIENT_STATUS = 0
+  </select>
+
+
+  <select id="select" 
+          resultType="org.medipaw.domain.NoteVO">
+    SELECT * FROM NOTE_MAIN WHERE NOTE_NO = #{note_no}
+  </select>
+</mapper>
+
+
+

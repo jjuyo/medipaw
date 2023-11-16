@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.SiljongAttachMapper">
+  
+  <insert id="insertAttach">	<!-- 첨부파일 insert 쿼리문 -->
+    INSERT INTO SJ_ATTACH(SJNO, UUID, UPFOLDER, FILENAME) 
+    VALUES(#{sjno}, #{uuid}, #{upFolder}, #{fileName})
+  </insert>
+  
+  <delete id="deleteAttach">
+  	DELETE FROM SJ_ATTACH WHERE uuid = #{uuid}
+  </delete>  
+  
+  <select id="selectAttach" resultType="org.medipaw.domain.SiljongAttachVO">	
+    SELECT * FROM SJ_ATTACH WHERE sjno = #{sjno}
+  </select>
+  
+  <delete id="deleteAttachAll">
+  	DELETE FROM SJ_ATTACH WHERE sjno = #{sjno}
+  </delete>
+  
+  <select id="yesterdayFiles" resultType="org.medipaw.domain.SiljongAttachVO">	
+  	<!-- 전날의 폴더만 갖고 와서 select -->
+    <!-- SELECT * FROM tbl_attach WHERE upFolder = TRUNC(SYSDATE - 1) -->	
+    SELECT * FROM SJ_ATTACH WHERE upFolder = TO_CHAR(SYSDATE - 1, 'yyyy\MM\dd')
+  </select>
+  
+</mapper>
+

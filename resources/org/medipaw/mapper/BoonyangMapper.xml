@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.BoonyangMapper">
+<!-- 쿼리보관 -->
+	<sql id="criteria">
+		<trim prefix="(" suffix=")  AND " prefixOverrides="OR">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()"> title LIKE '%'||#{keyword}||'%' </when>
+						<when test="type == 'C'.toString()"> content LIKE '%'||#{keyword}||'%'  </when>
+						<when test="type == 'K'.toString()"> kind LIKE '%'||#{keyword}||'%'  </when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+<!-- 댓글 수 업데이트 -->
+	<update id="updateReplyCnt">
+	 UPDATE boonyang
+    SET replyCnt = replyCnt + #{increment}
+    WHERE byno = #{byno}
+	</update>
+	
+	<select id="selectAllPaging"
+		resultType="org.medipaw.domain.BoonyangVO">
+     <![CDATA[ 
+        SELECT *
+       FROM   ( SELECT /*+INDEX_DESC(boonyang pk_boonyang) */
+                   rownum rn, byno, title, content, id, kind, state, gender, age,
+                   regDate, replyCnt, byImg
+              FROM   boonyang
+              WHERE     ]]>
+		<!-- 보관해둔 쿼리 사용 -->
+	<include refid="criteria"></include>
+	
+    <![CDATA[           
+               rownum <= #{amount} * #{pageNum} ) 
+       WHERE  rn > #{amount} * ( #{pageNum} - 1 )    
+    ]]>
+	</select>
+	<select id="selectMyList" resultType="org.medipaw.domain.BoonyangVO">
+     <![CDATA[ 
+       SELECT *
+       FROM   ( SELECT /*+INDEX_DESC(boonyang pk_boonyang) */
+                   rownum rn, byno, title, content, id, kind, state, gender, age,
+                   regDate, replyCnt, byImg
+              FROM   boonyang WHERE id=#{id} and
+               rownum <= #{cri.amount} * #{cri.pageNum} )
+       WHERE  rn > #{cri.amount} * ( #{cri.pageNum} - 1 )       
+    ]]>
+	</select>
+	
+	<select id="totalCount" resultType="int">
+		SELECT COUNT(*) FROM
+		boonyang WHERE 
+		<!-- 보관해둔 쿼리 사용 -->
+		<include refid="criteria"></include>
+		byno > 0
+	</select>
+	
+	<select id="mytotalCount" resultType="int">
+		SELECT COUNT(*) FROM
+		boonyang WHERE id=#{id}
+	</select>
+	
+
+	<select id="select" resultType="org.medipaw.domain.BoonyangVO">
+		SELECT * FROM boonyang WHERE byno
+		= #{byno}
+	</select>
+	 <insert id="insert">	<!-- insert를 하기 전에 시퀀스 번호를 알아야 할 경우 -->
+    <selectKey keyProperty="byno" order="BEFORE" resultType="int">
+    SELECT byno_seq.NEXTVAL FROM dual
+  	</selectKey>
+INSERT INTO boonyang (byno, state, kind, gender, age,  title, content, regDate , id, byImg)
+		VALUES(#{byno}, #{state}, #{kind}, #{gender}, #{age}, #{title}, #{content}, SYSDATE, #{id}, #{byImg})
+  </insert>
+	
+	<delete id="delete">
+		DELETE FROM boonyang WHERE byno = #{byno}
+	</delete>
+	<update id="update">
+		UPDATE boonyang SET title=#{title},
+		content=#{content}, gender=#{gender}, age=#{age}, kind=#{kind}, state=#{state}, byImg=#{byImg}
+		WHERE byno =
+		#{byno}
+	</update>
+
+</mapper>

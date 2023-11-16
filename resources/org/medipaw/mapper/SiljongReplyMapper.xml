@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.SiljongReplyMapper">
+  
+  <select id="select" resultType="org.medipaw.domain.SiljongReplyVO">
+    SELECT * FROM SJ_REPLY WHERE sjrno = #{sjrno}
+  </select>
+  
+  <insert id="insert">	<!-- insert를 하기 전에 시퀀스 번호를 알아야 할 경우 -->
+    INSERT INTO SJ_REPLY VALUES(SJ_REPLY_SEQ.NEXTVAL, #{sjReply}, #{id}, SYSDATE, #{sjno})
+  </insert>
+  
+  <delete id="delete">
+  	DELETE FROM SJ_REPLY WHERE sjrno = #{sjrno}
+  </delete>
+  
+  <update id="update">
+  	UPDATE SJ_REPLY SET sjreply = #{sjReply} WHERE sjrno = #{sjrno}
+  </update>
+  
+  <select id="selectAllPaging" resultType="org.medipaw.domain.SiljongReplyVO">	
+  <!-- resultType 저렇게 놓으면 알아서 리스트나 vo를 갖고옴 -->
+    <![CDATA[
+    SELECT sjrno,sjno, sjreply, id, sjrRegDate 
+	FROM (SELECT /*+INDEX(SJ_REPLY idx_sjreply) */
+	rownum rn, sjrno,sjno, sjreply, id, sjrRegDate FROM SJ_REPLY 
+	WHERE rownum <= #{cri.amount} * #{cri.pageNum} AND sjno = #{sjno} )
+	WHERE rn > #{cri.amount} * ( #{cri.pageNum} - 1 )
+  	]]>
+  </select>
+  
+  <select id="countReply" resultType="int">
+  	SELECT COUNT(*) FROM SJ_REPLY WHERE sjno = #{sjno}
+  </select>
+  
+</mapper>
+

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.FaqMapper">
+<resultMap type = "org.medipaw.domain.FaqVO" id="faqMap">
+	<result property = "faqNo"	column="faqno"></result>
+	<result property = "faqQ"		column="faqq"></result>
+	<result property = "faqA"	column="faqa"></result>
+</resultMap>
+  <!-- 쿼리 보관 -->
+<select id="getFaqs" resultType="org.medipaw.domain.FaqVO">
+	  SELECT * FROM faq
+</select>
+    		
+  <update id="updateFaq" parameterType="org.medipaw.domain.FaqVO">
+      UPDATE faq 
+      SET 
+          faqq = #{faqQ},
+          faqa = #{faqA} 
+      WHERE 
+          faqno = #{faqNo}
+  </update>
+    			 
+  <insert id="addFaq" parameterType="org.medipaw.domain.FaqVO"> 
+  INSERT INTO faq (faqno, faqq, faqa) VALUES (faq_seq.NEXTVAL, #{faqQ}, #{faqA}) 
+  </insert>
+  
+     <delete id="deleteFaq" parameterType="int">
+        DELETE FROM faq WHERE faqno = #{faqNo}
+    </delete>
+  
+</mapper>
+
+
+

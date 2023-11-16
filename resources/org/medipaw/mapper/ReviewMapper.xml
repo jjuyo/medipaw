@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.ReviewMapper">
+<select id="selectAll" resultType="org.medipaw.domain.ReviewVO">
+  <![CDATA[
+      SELECT *
+        FROM (
+            SELECT  /*+INDEX_DESC(REVIEW pk_review) */
+             a.*, ROWNUM rnum
+            FROM (
+                SELECT *
+                FROM review
+                WHERE animalhosp_no = #{animalhosp_no} order by rno desc	
+            ) a
+            WHERE ROWNUM <= #{cri.pageNum} * #{cri.amount}
+        )
+        WHERE rnum > (#{cri.pageNum} - 1) * #{cri.amount}
+  ]]>
+</select>
+
+<select id="selectMy" resultType="org.medipaw.domain.ReviewVO">
+  <![CDATA[
+    SELECT *
+    FROM (
+        SELECT /*+INDEX_DESC(review pk_review) */
+               *
+        FROM review
+        WHERE id = #{id}
+              AND rownum <= #{cri.amount} * #{cri.pageNum}
+    )
+    WHERE rownum > #{cri.amount} * (#{cri.pageNum} - 1)
+  ]]>
+</select>
+
+
+	<!-- 페이징 -->
+	<select id="totalCount" resultType="int">
+		SELECT COUNT(*) FROM
+		review WHERE animalhosp_no = #{animalhosp_no}
+	</select>
+		<select id="mytotalCount" resultType="int">
+		SELECT COUNT(*) FROM
+		review WHERE id=#{id}
+	</select>
+	
+
+	<select id="select" resultType="org.medipaw.domain.ReviewVO">
+		SELECT * FROM review WHERE rno
+		= #{rno}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO review (rno, regDate, star, title,  content, animalhosp_no , id, tno)
+		VALUES(rno_seq.NEXTVAL, sysdate, #{star}, #{title}, #{content}, #{animalhosp_no}, #{id}, #{tno})
+	</insert>
+	<delete id="delete">
+		DELETE FROM review WHERE rno = #{rno}
+	</delete>
+	<update id="update">
+		UPDATE review SET title=#{title},
+		content=#{content}, star=#{star}
+		WHERE rno =
+		#{rno}
+	</update>
+	<!-- 진료내역 당 리뷰 중복 체크  -->
+	<select id="tnoCheck" resultType="int">
+	select count(*) from review where tno=#{tno}
+	</select>
+
+</mapper>

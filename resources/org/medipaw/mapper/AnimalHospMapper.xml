@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.medipaw.mapper.AnimalHospMapper">
+<!--  쿼리 보관  -->
+<sql id="criteria">
+<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+<foreach item="type" collection="typeArr">
+<trim prefix="OR">
+<choose>
+<when test="type == 'T'.toString()"> title LIKE '%'||#{keyword}||'%' </when>
+<when test="type == 'C'.toString()"> content LIKE '%'||#{keyword}||'%' </when>
+<when test="type == 'W'.toString()"> writer LIKE '%'||#{keyword}||'%' </when>
+</choose>
+</trim>
+</foreach>
+</trim>
+</sql>
+<select id="selectAllPaging" resultType="org.medipaw.domain.AnimalHospVO">
+<![CDATA[ SELECT ANIMALHOSP_NO, ANIMALHOSP_NAME, LICENSE_DATE, SALES_STATUS,CLOSED_DATE, HSOP_ROADNAME_ADDRESS,HSOP_POSTNUM, A_LATITUDE,A_HARDNESS,ANIMALHOSP_PIC,ANIMALHOSP_OPEN,ANIMALHOSP_REST,STAR_TOTAL,RV_CNT,HSOP_PHONENUM FROM (SELECT rownum rn,ANIMALHOSP_NO,ANIMALHOSP_NAME, LICENSE_DATE, SALES_STATUS,CLOSED_DATE,HSOP_ROADNAME_ADDRESS, HSOP_POSTNUM,A_LATITUDE,A_HARDNESS,ANIMALHOSP_PIC,ANIMALHOSP_OPEN,ANIMALHOSP_REST,STAR_TOTAL,RV_CNT,HSOP_PHONENUM FROM ANIMALHOSP_MAIN WHERE ]]>
+<!--  보관해 둔 쿼리 사용  -->
+<include refid="criteria"/>
+<![CDATA[ rownum <= #{amount} * #{pageNum} ) WHERE rn > #{amount} * ( #{pageNum} - 1 ) ]]>
+</select>
+<select id="totalCount" resultType="int">
+<![CDATA[ SELECT COUNT(*) FROM ANIMALHOSP_MAIN WHERE ]]>
+<!--  보관해 둔 쿼리 사용  -->
+<include refid="criteria"/>
+<![CDATA[ ANIMALHOSP_NO > 0 ]]>
+</select>
+<select id="searchByMap" resultType="org.medipaw.domain.AnimalHospVO">
+<![CDATA[ SELECT * FROM ( SELECT ROWNUM rn, ANIMALHOSP_NO, ANIMALHOSP_NAME, LICENSE_DATE, SALES_STATUS,CLOSED_DATE,HSOP_ROADNAME_ADDRESS, HSOP_POSTNUM,A_LATITUDE,A_HARDNESS, ANIMALHOSP_PIC,ANIMALHOSP_OPEN,ANIMALHOSP_REST, STAR_TOTAL,RV_CNT ,HSOP_PHONENUM FROM ( SELECT ANIMALHOSP_NO, ANIMALHOSP_NAME,LICENSE_DATE, SALES_STATUS,CLOSED_DATE, HSOP_ROADNAME_ADDRESS,HSOP_POSTNUM,A_LATITUDE,A_HARDNESS, ANIMALHOSP_PIC,ANIMALHOSP_OPEN,ANIMALHOSP_REST, STAR_TOTAL,RV_CNT ,HSOP_PHONENUM FROM ANIMALHOSP_MAIN ) WHERE (6371 * acos(cos( #{aLatitude} * 3.14159 / 180) * cos(A_LATITUDE * 3.14159 / 180) * cos((A_HARDNESS - #{aHardness}) * 3.14159 / 180) + sin( #{aLatitude} * 3.14159 / 180) * sin(A_LATITUDE*3.14159/180))) <= 1 ) WHERE rn > #{cri.amount}*(#{cri.pageNum}-1) and rownum <= #{cri.amount}*#{cri.pageNum} ]]>
+</select>
+<select id="view" resultType="org.medipaw.domain.AnimalHospVO">
+<![CDATA[ SELECT * FROM animalhosp_main WHERE animalhosp_no = #{ano} ]]>
+</select>
+<select id="Myview" resultType="org.medipaw.domain.AnimalHospVO">
+<![CDATA[ SELECT * FROM animalhosp_main WHERE sid = #{sid} ]]>
+</select>
+<insert id="insert"> INSERT INTO animalhosp_main(animalhosp_no,animalhosp_name,sales_status,hsop_roadname_address, hsop_postnum,a_latitude,a_hardness,animalhosp_open,animalhosp_rest,star_total,rv_cnt,hsop_phonenum,sid) VALUES(ANIMALHOSP_MAIN_SEQ.NEXTVAL, #{animalhosp_name},'영업중',#{hsop_roadname_address},#{hsop_postnum}, #{a_latitude},#{a_hardness},#{animalhosp_open},#{animalhosp_rest},#{star_total},#{rv_cnt},#{hsop_phonenum},#{sid}) </insert>
+<update id="update"> UPDATE animalhosp_main SET animalhosp_name = #{animalhosp_name}, hsop_roadname_address = #{hsop_roadname_address}, hsop_postnum = #{hsop_postnum}, a_latitude = #{a_latitude}, a_hardness = #{a_hardness}, animalhosp_open = #{animalhosp_open}, animalhosp_rest = #{animalhosp_rest}, hsop_phonenum = #{hsop_phonenum} WHERE animalhosp_no = #{animalhosp_no} </update>
+<delete id="delete" parameterType="org.medipaw.domain.AnimalHospVO"> DELETE FROM animalhosp_main WHERE sid = #{sid} </delete>
+</mapper>
